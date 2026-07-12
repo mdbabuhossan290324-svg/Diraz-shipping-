@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daraz Admin Panel - Product Management</title>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --daraz-orange: #f85606;
+            --bg-color: #f4f6f9;
+            --text-color: #333;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px 10px; }
+        
+        .admin-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        h2 {
+            text-align: center;
+            color: var(--daraz-orange);
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #555; }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        input:focus, select:focus { border-color: var(--daraz-orange); }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: var(--daraz-orange);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover { background: #df4900; }
+        
+        .product-list-title {
+            margin-top: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--daraz-orange);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+        }
+        .product-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; }
+        .product-details { flex-grow: 1; margin-left: 10px; font-size: 13px; }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <h2><i class="fa-solid fa-user-gear"></i> দারাজ এডমিন প্যানেল</h2>
+        
+        <form id="productForm">
+            <div class="form-group">
+                <label>প্রোডাক্টের নাম *</label>
+                <input type="text" id="prodName" placeholder="যেমন: Premium T-Shirt" required>
+            </div>
+            
+            <div class="form-group">
+                <label>বিক্রয় মূল্য (৳) *</label>
+                <input type="number" id="prodPrice" placeholder="যেমন: 450" required>
+            </div>
+            
+            <div class="form-group">
+                <label>পুরোনো মূল্য / ডিসকাউন্ট মূল্য (৳)</label>
+                <input type="number" id="prodOldPrice" placeholder="যেমন: 800">
+            </div>
+            
+            <div class="form-group">
+                <label>প্রোডাক্টের ছবির লিংক (URL) *</label>
+                <input type="text" id="prodImgUrl" placeholder="https://example.com/image.jpg" required>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="prodCod" checked style="width:18px; height:18px;">
+                <label for="prodCod" style="margin-bottom:0; cursor:pointer;">ক্যাশ অন ডেলিভারি (COD) উপলব্ধ</label>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-plus"></i> প্রোডাক্ট লাইভ করুন
+            </button>
+        </form>
+
+        <div class="product-list-title">বিদ্যমান প্রোডাক্ট সমূহ (Live Products)</div>
+        <div id="adminProductList">লোড হচ্ছে...</div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
+            authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
+            projectId: "daraz-bangladesh-6a0f8",
+            storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
+            messagingSenderId: "133315105065",
+            appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Add Product Event
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('prodName').value;
+            const price = document.getElementById('prodPrice').value;
+            const oldPrice = document.getElementById('prodOldPrice').value || "0";
+            const imageUrl = document.getElementById('prodImgUrl').value;
+            const isCodAvailable = document.getElementById('prodCod').checked;
+
+            db.collection("products").add({
+                name: name,
+                price: price,
+                oldPrice: oldPrice,
+                imageUrl: imageUrl,
+                isCodAvailable: isCodAvailable,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert("🎯 প্রোডাক্ট সফলভাবে ওয়েবসাইটে লাইভ হয়েছে!");
+                document.getElementById('productForm').reset();
+                fetchAdminProducts();
+            })
+            .catch((error) => {
+                alert("ত্রুটি: " + error.message);
+            });
+        });
+
+        // Fetch & Show Products with Delete Option
+        function fetchAdminProducts() {
+            const listRef = document.getElementById('adminProductList');
+            db.collection("products").orderBy("createdAt", "desc").get().then((querySnapshot) => {
+                listRef.innerHTML = "";
+                if(querySnapshot.empty) {
+                    listRef.innerHTML = "<div style='color:#888; text-align:center;'>কোনো প্রোডাক্ট লাইভ নেই।</div>";
+                    return;
+                }
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    const id = doc.id;
+                    listRef.innerHTML += `
+                        <div class="product-item">
+                            <img src="${product.imageUrl || 'https://via.placeholder.com/40'}" alt="">
+                            <div class="product-details">
+                                <strong>${product.name}</strong><br>
+                                ৳ ${product.price} <span style="text-decoration:line-through; color:#999;">৳ ${product.oldPrice}</span>
+                            </div>
+                            <button class="delete-btn" onclick="deleteProduct('${id}')"><i class="fa-solid fa-trash"></i> ডিলিট</button>
+                        </div>
+                    `;
+                });
+            }).catch(err => {
+                listRef.innerHTML = "লোড করতে সমস্যা হচ্ছে।";
+            });
+        }
+
+        // Delete Product Function
+        window.deleteProduct = function(id) {
+            if(confirm("আপনি কি নিশ্চিতভাবে এই প্রোডাক্টটি ডিলিট করতে চান?")) {
+                db.collection("products").doc(id).delete().then(() => {
+                    alert("প্রোডাক্ট ডিলিট করা হয়েছে।");
+                    fetchAdminProducts();
+                });
+            }
+        }
+
+        window.onload = fetchAdminProducts;
+    </script>
+</body>
+</html>
