@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Premium Checkout - Daraz Bangladesh</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://pl30320118.effectivecpmnetwork.com/e3/ef/16/e3ef1602ca15334e4445c71c53892196.js"></script>
+
+    <style>
+        :root {
+            --primary: #F85606;
+            --primary-gradient: linear-gradient(135deg, #F85606 0%, #FF7A00 100%);
+            --secondary: #FF7A00;
+            --success: #22C55E;
+            --background: #F4F6F9;
+            --text: #1F2937;
+            --border: #E5E7EB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--background); color: var(--text); display: flex; justify-content: center; min-height: 100vh; }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: #FFFFFF;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 90px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+        }
+
+        .ad-space-mobile-top {
+            width: 100%;
+            min-height: 50px;
+            background: #F3F4F6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header {
+            background: var(--primary-gradient);
+            padding: 16px;
+            color: white;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .live-status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #FFF5F0;
+            font-size: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .visitor-node { color: var(--primary); font-weight: 600; }
+        .countdown-node { color: #DC2626; font-weight: 600; }
+
+        .product-wrapper { padding: 16px; }
+        .image-viewport {
+            width: 100%;
+            height: 280px;
+            background: #F9FAFB;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-render-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .product-details { margin-top: 14px; }
+        .product-title { font-size: 19px; font-weight: 700; color: #111827; }
+        .pricing-tier { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+        .price-current { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .price-old { font-size: 15px; text-decoration: line-through; color: #9CA3AF; }
+        .stock-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--success); font-weight: 600; background: #EEFBF3; padding: 4px 10px; border-radius: 20px; }
+
+        .shipping-card { background: #F9FAFB; border: 1px dashed #D1D5DB; border-radius: 12px; padding: 12px; margin: 15px 0; font-size: 13px; }
+        .shipping-line { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+
+        .checkout-form-container { padding: 0 16px; }
+        
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #4B5563; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #D1D5DB; border-radius: 10px; font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--primary); }
+
+        .quantity-widget { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; background: #F3F4F6; padding: 8px 14px; border-radius: 10px; width: fit-content; }
+        .qty-action { width: 32px; height: 32px; border: 1px solid #C4C9D3; background: #FFF; font-weight: bold; cursor: pointer; border-radius: 6px; }
+        .qty-output { font-weight: 700; font-size: 16px; }
+
+        .payment-wrapper { margin-bottom: 20px; }
+        .payment-grid { display: flex; gap: 12px; }
+        .payment-box { flex: 1; border: 2px solid #E5E7EB; border-radius: 12px; padding: 14px; text-align: center; cursor: pointer; background: #FFF; }
+        
+        .payment-box.selected[data-method="COD"] { border-color: var(--primary); background: #FFF5F0; color: var(--primary); }
+        .payment-box.selected[data-method="DIGITAL"] { border-color: #E11D48; background: #FFF1F2; color: #E11D48; }
+
+        .digital-payment-gateway-node { background: #FFF1F2; padding: 14px; border-radius: 12px; margin-top: 12px; border: 1px solid #FECDD3; display: none; }
+        .gateway-instruction { font-size: 12px; margin-bottom: 10px; color: #BE123C; }
+
+        .sticky-footer-action-layer { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: #FFFFFF; padding: 14px 16px; box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.05); z-index: 99; border-top: 1px solid var(--border); }
+        .submit-transaction-btn { width: 100%; background: var(--primary-gradient); color: #FFF; border: none; padding: 15px; border-radius: 30px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- MOBILE BANNER AD (320x50) -->
+        <div class="ad-space-mobile-top">
+            <script>
+              atOptions = {
+                'key' : '0954ebc33c055a57db1b0016759fbd35',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/0954ebc33c055a57db1b0016759fbd35/invoke.js"></script>
+        </div>
+
+        <div class="header">Daraz Bangladesh</div>
+
+        <div class="live-status-bar">
+            <div class="visitor-node"><i class="fa-solid fa-users"></i> <span id="live-visitors">14</span> জন দেখছেন</div>
+            <div class="countdown-node"><i class="fa-solid fa-clock"></i> অফার শেষ: <span id="live-timer">12:45</span></div>
+        </div>
+
+        <div class="product-wrapper">
+            <div class="image-viewport">
+                <img id="renderProductImg" class="main-render-img" src="https://via.placeholder.com/400" alt="Product"/>
+            </div>
+            <div class="product-details">
+                <h1 class="product-title" id="renderTitle">প্রোডাক্ট লোড হচ্ছে...</h1>
+                <div class="pricing-tier">
+                    <span class="price-current">৳ <span id="renderPrice">0</span></span>
+                    <span class="price-old" id="renderOldPrice">৳ 0</span>
+                </div>
+                <div class="stock-indicator"><i class="fa-solid fa-square-check"></i> ইন স্টক রেডি</div>
+            </div>
+        </div>
+
+        <div class="checkout-form-container">
+            <form id="productionCheckoutEngine">
+                <div class="form-group">
+                    <label>আপনার নাম *</label>
+                    <input type="text" id="formCustName" class="form-control" placeholder="সম্পূর্ণ নাম লিখুন" required/>
+                </div>
+                <div class="form-group">
+                    <label>মোবাইল নম্বর *</label>
+                    <input type="tel" id="formCustPhone" class="form-control" placeholder="১১ ডিজিটের মোবাইল নম্বর" required pattern="[0-9]{11}"/>
+                </div>
+                <div class="form-group">
+                    <label>পূর্ণাঙ্গ ঠিকানা *</label>
+                    <textarea id="formCustAddress" class="form-control" rows="2" placeholder="জেলা, থানা, গ্রাম/মহল্লা" required></textarea>
+                </div>
+
+                <label style="font-size:13px; font-weight:600;">পণ্যের পরিমাণ</label>
+                <div class="quantity-widget">
+                    <button type="button" class="qty-action" onclick="adjustProductQuantity(-1)">-</button>
+                    <span class="qty-output" id="qtyMetrics">1</span>
+                    <button type="button" class="qty-action" onclick="adjustProductQuantity(1)">+</button>
+                </div>
+
+                <div class="payment-wrapper">
+                    <label style="font-size:13px; font-weight:600; display:block; margin-bottom:8px;">পেমেন্ট মেথড</label>
+                    <div class="payment-grid">
+                        <div class="payment-box selected" id="optCod" data-method="COD" onclick="switchPayment('COD')">
+                            <i class="fa-solid fa-hand-holding-dollar"></i><div>ক্যাশ অন ডেলিভারি</div>
+                        </div>
+                        <div class="payment-box" id="optDigital" data-method="DIGITAL" onclick="switchPayment('DIGITAL')">
+                            <i class="fa-solid fa-mobile-screen"></i><div>বিকাশ / নগদ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="digital-payment-gateway-node" id="gatewayContainer">
+                    <div class="gateway-instruction">
+                        <strong>📌 পেমেন্ট মার্চেন্ট নম্বর:</strong><br/>
+                        <span id="renderMerchantCryptoDetails">বিকাশ/নগদ নম্বর লোড হচ্ছে...</span>
+                    </div>
+                    <div class="form-group"><input type="tel" id="formGatewaySender" class="form-control" placeholder="যে নম্বর থেকে টাকা পাঠিয়েছেন"/></div>
+                    <div class="form-group"><input type="text" id="formGatewayTrxId" class="form-control" placeholder="Transaction ID (TrxID)"/></div>
+                </div>
+
+                <div class="sticky-footer-action-layer">
+                    <button type="submit" class="submit-transaction-btn">
+                        <i class="fa-solid fa-circle-check"></i> অর্ডার নিশ্চিত করুন (৳<span id="finalTotalSpan">0</span>)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
+            authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
+            projectId: "daraz-bangladesh-6a0f8",
+            storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
+            messagingSenderId: "133315105065",
+            appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let productPriceUnit = 0;
+        let activeQuantity = 1;
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetProductDocumentId = urlParams.get('id') || "default_product"; 
+
+        function loadSystemDynamicContext() {
+            db.collection("products").doc(targetProductDocumentId).get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('renderTitle').innerText = data.name;
+                    document.getElementById('renderPrice').innerText = data.price;
+                    document.getElementById('renderOldPrice').innerText = "৳ " + (data.oldPrice || 0);
+                    document.getElementById('renderProductImg').src = data.imageUrl;
+                    productPriceUnit = parseInt(data.price) || 0;
+                    
+                    if(data.isCodAvailable === false) {
+                        document.getElementById('optCod').style.display = 'none';
+                        switchPayment('DIGITAL');
+                    }
+                    recalculateMetrics();
+                }
+            });
+
+            db.collection("settings").doc("payment_gateways").get().then((doc) => {
+                if(doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('renderMerchantCryptoDetails').innerHTML = `বিকাশ: ${data.bkash || 'N/A'}<br>নগদ: ${data.nagad || 'N/A'}`;
+                }
+            });
+        }
+
+        function adjustProductQuantity(delta) {
+            activeQuantity += delta;
+            if(activeQuantity < 1) activeQuantity = 1;
+            document.getElementById('qtyMetrics').innerText = activeQuantity;
+            recalculateMetrics();
+        }
+
+        function recalculateMetrics() {
+            document.getElementById('finalTotalSpan').innerText = productPriceUnit * activeQuantity;
+        }
+
+        let selectedMethod = "COD";
+        function switchPayment(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.payment-box').forEach(el => el.classList.remove('selected'));
+            if(method === 'COD') {
+                document.getElementById('optCod').classList.add('selected');
+                document.getElementById('gatewayContainer').style.display = 'none';
+            } else {
+                document.getElementById('optDigital').classList.add('selected');
+                document.getElementById('gatewayContainer').style.display = 'block';
+            }
+        }
+
+        document.getElementById('productionCheckoutEngine').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const payload = {
+                orderId: "ORDER-" + Math.floor(100000 + Math.random() * 900000),
+                productName: document.getElementById('renderTitle').innerText,
+                quantity: activeQuantity,
+                totalPrice: productPriceUnit * activeQuantity,
+                customerName: document.getElementById('formCustName').value,
+                customerPhone: document.getElementById('formCustPhone').value,
+                deliveryAddress: document.getElementById('formCustAddress').value,
+                paymentMethod: selectedMethod,
+                senderAccount: document.getElementById('formGatewaySender').value || "N/A",
+                transactionId: document.getElementById('formGatewayTrxId').value || "N/A",
+                timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"})
+            };
+
+            const googleSheetsWebhookUrl = "https://script.google.com/macros/s/AKfycbzyL8PAl-DAAmTIVKEuzdrJRA8P3jtcus8SXGdcLUDswUDkNeD6ZA1xw5TPBggeRbx1/exec";
+
+            fetch(googleSheetsWebhookUrl, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                alert("অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!");
+                document.getElementById('productionCheckoutEngine').reset();
+                location.reload();
+            });
+        });
+
+        window.onload = loadSystemDynamicContext;
+    </script>
+</body>
+</html>
