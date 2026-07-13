@@ -1,152 +1,175 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daraz Bangladesh | Online Shopping Shop</title>
+<!-- FontAwesome & Google Fonts -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+<style>
+    :root { --daraz-orange: #f85606; --bg-gray: #f4f4f6; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background-color: var(--bg-gray); padding-bottom: 60px; overflow-x: hidden; }
     
-    <!-- FontAwesome & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    /* 1-Second Vertical 9:16 App Open Splash Screen */
+    #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease, visibility 0.5s;
+    }
+    #splash-screen img {
+        width: auto;
+        height: 90vh; 
+        aspect-ratio: 9/16;
+        object-fit: contain;
+        animation: scaleUp 0.8s ease-out;
+    }
+    @keyframes scaleUp {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    #main-content { opacity: 0; transition: opacity 0.5s ease; }
+
+    /* Header & Search Bar */
+    .header { background: white; padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .logo { font-size: 20px; font-weight: bold; color: var(--daraz-orange); text-decoration: none; display: flex; align-items: center; gap: 5px; }
+    .search-container { display: flex; background: #eff0f5; border-radius: 8px; padding: 2px 8px; align-items: center; }
+    .search-container input { flex: 1; border: none; background: transparent; padding: 8px; outline: none; font-size: 14px; }
+    .search-container i { color: #888; padding: 0 5px; cursor: pointer; }
     
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    /* Notice Bar & Banner */
+    .notice-bar { background: #ffe8de; color: var(--daraz-orange); padding: 8px; text-align: center; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .hero-banner { width: 100%; max-height: 450px; object-fit: cover; display: block; }
+    
+    /* 50% Off Action Button Section (AdBlock Proofed) */
+    .special-container-box { text-align: center; padding: 15px 10px; background: white; margin-bottom: 10px; }
+    .action-link-btn { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); color: white; padding: 12px 30px; font-size: 16px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(255,8,68,0.3); animation: bounceAnimation 2s infinite; }
+    @keyframes bounceAnimation { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    <style>
-        :root { --daraz-orange: #f85606; --bg-gray: #f4f4f6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background-color: var(--bg-gray); padding-bottom: 60px; overflow-x: hidden; }
-        
-        /* 1-Second Vertical 9:16 App Open Splash Screen */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s;
-        }
-        #splash-screen img {
-            width: auto;
-            height: 90vh; 
-            aspect-ratio: 9/16;
-            object-fit: contain;
-            animation: scaleUp 0.8s ease-out;
-        }
-        @keyframes scaleUp {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+    /* Banner Ad Container Styles */
+    .ad-slot-middle { display: flex; justify-content: center; align-items: center; padding: 10px 0; background: white; margin-bottom: 10px; overflow: hidden; }
+    .ad-slot-bottom { display: flex; flex-direction: column; gap: 15px; justify-content: center; align-items: center; padding: 15px 10px; background: white; margin-top: 15px; overflow: hidden; }
 
-        #main-content { opacity: 0; transition: opacity 0.5s ease; }
+    /* Section Title */
+    .section-title { padding: 15px 10px 5px 10px; font-size: 16px; font-weight: bold; color: #333; display: flex; align-items: center; gap: 5px; }
+    
+    /* Optimized Unlimited 4 to 6 Products Grid per Line */
+    .product-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+        gap: 8px; 
+        padding: 8px; 
+    }
+    @media(min-width: 480px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media(min-width: 768px) { .product-grid { grid-template-columns: repeat(6, 1fr); } }
 
-        /* Header & Search Bar */
-        .header { background: white; padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-        .logo { font-size: 20px; font-weight: bold; color: var(--daraz-orange); text-decoration: none; display: flex; align-items: center; gap: 5px; }
-        .search-container { display: flex; background: #eff0f5; border-radius: 8px; padding: 2px 8px; align-items: center; }
-        .search-container input { flex: 1; border: none; background: transparent; padding: 8px; outline: none; font-size: 14px; }
-        .search-container i { color: #888; padding: 0 5px; cursor: pointer; }
-        
-        /* Notice Bar & Banner */
-        .notice-bar { background: #ffe8de; color: var(--daraz-orange); padding: 8px; text-align: center; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .banner { width: 100%; max-height: 450px; object-fit: cover; display: block; }
-        
-        /* 50% Off Direct Link Button Section */
-        .promo-button-container { text-align: center; padding: 15px 10px; background: white; margin-bottom: 10px; }
-        .direct-ad-btn { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); color: white; padding: 12px 30px; font-size: 16px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(255,8,68,0.3); animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    .product-card { background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    .product-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+    .product-info { padding: 6px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .product-name { font-size: 11px; color: #333; height: 32px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 16px; margin-bottom: 2px; }
+    .price-row { margin: 2px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+    .current-price { color: var(--daraz-orange); font-size: 12px; font-weight: bold; }
+    .old-price { color: #999; text-decoration: line-through; font-size: 9px; }
+    .cod-tag { font-size: 8px; background: #e5f9ed; color: #00b74a; padding: 1px 4px; border-radius: 3px; width: fit-content; font-weight: bold; }
+    .order-btn { background: var(--daraz-orange); color: white; text-align: center; padding: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border-radius: 4px; margin-top: 5px; display: block; }
+    
+    /* 9:16 Responsive YouTube Shorts Player Container */
+    .video-container { padding: 10px; background: white; margin: 10px 0; text-align: center; display: flex; justify-content: center; }
+    .video-wrapper { position: relative; width: 100%; max-width: 340px; aspect-ratio: 9/16; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        /* Section Title */
-        .section-title { padding: 15px 10px 5px 10px; font-size: 16px; font-weight: bold; color: #333; display: flex; align-items: center; gap: 5px; }
-        
-        /* Optimized Unlimited 4 to 6 Products Grid per Line */
-        .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
-            gap: 8px; 
-            padding: 8px; 
-        }
-        @media(min-width: 480px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
-        @media(min-width: 768px) { .product-grid { grid-template-columns: repeat(6, 1fr); } }
+    /* Partner Brand / Footer Image Section (AdBlock Proofed) */
+    .partner-footer-box { padding: 10px; text-align: center; background: white; margin-top: 10px; }
+    .partner-footer-box img { width: 100%; max-width: 500px; border-radius: 6px; cursor: pointer; }
 
-        .product-card { background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .product-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
-        .product-info { padding: 6px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-name { font-size: 11px; color: #333; height: 32px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 16px; margin-bottom: 2px; }
-        .price-row { margin: 2px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
-        .current-price { color: var(--daraz-orange); font-size: 12px; font-weight: bold; }
-        .old-price { color: #999; text-decoration: line-through; font-size: 9px; }
-        .cod-tag { font-size: 8px; background: #e5f9ed; color: #00b74a; padding: 1px 4px; border-radius: 3px; width: fit-content; font-weight: bold; }
-        .order-btn { background: var(--daraz-orange); color: white; text-align: center; padding: 6px; text-decoration: none; font-size: 10px; font-weight: bold; border-radius: 4px; margin-top: 5px; display: block; }
-        
-        /* 9:16 Responsive YouTube Shorts Player Container */
-        .video-container { padding: 10px; background: white; margin: 10px 0; text-align: center; display: flex; justify-content: center; }
-        .video-wrapper { position: relative; width: 100%; max-width: 340px; aspect-ratio: 9/16; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+    /* Footer App Download Button & Social Layout */
+    .footer-social-section { background: white; padding: 20px 10px; text-align: center; border-top: 1px solid #eee; margin-top: 15px; }
+    .download-app-btn { background: #00b74a; color: white; font-weight: bold; padding: 12px 25px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,183,74,0.2); }
+    .social-links { display: flex; justify-content: center; gap: 20px; font-size: 24px; margin-bottom: 10px; }
+    .social-links a { transition: transform 0.2s; }
+    .social-links a:hover { transform: scale(1.1); }
+    .social-links .fb { color: #1877f2; }
+    .social-links .yt { color: #ff0000; }
+    .social-links .tt { color: #000000; }
+    .social-links .pin { color: #bd081c; }
+    
+    /* AI Chatbot Button & Box */
+    .ai-btn { position: fixed; bottom: 20px; right: 20px; background: #0084ff; color: white; padding: 10px 18px; border-radius: 30px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,84,255,0.3); cursor: pointer; z-index: 1000; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+    .ai-chat-box { position: fixed; bottom: 85px; right: 20px; width: 300px; height: 380px; background: white; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); display: none; flex-direction: column; overflow: hidden; z-index: 1000; border: 1px solid #eee; }
+    .ai-chat-header { background: #0084ff; color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+    .ai-chat-messages { flex: 1; padding: 10px; overflow-y: auto; font-size: 13px; background: #f7f9fb; }
+    .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; max-width: 85%; line-height: 18px; }
+    .msg.bot { background: white; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .msg.user { background: #0084ff; color: white; margin-left: auto; }
+    .ai-chat-input { display: flex; border-top: 1px solid #eee; padding: 5px; background: white; }
+    .ai-chat-input input { flex: 1; border: none; padding: 8px; outline: none; font-size: 13px; }
+    .ai-chat-input button { background: #0084ff; color: white; border: none; padding: 0 12px; border-radius: 6px; cursor: pointer; }
 
-        /* Ad Banner Footer Section */
-        .ad-banner-footer { padding: 10px; text-align: center; background: white; margin-top: 10px; }
-        .ad-banner-footer img { width: 100%; max-width: 500px; border-radius: 6px; cursor: pointer; }
-
-        /* Footer App Download Button & Social Layout */
-        .footer-social-section { background: white; padding: 20px 10px; text-align: center; border-top: 1px solid #eee; margin-top: 15px; }
-        .download-app-btn { background: #00b74a; color: white; font-weight: bold; padding: 12px 25px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,183,74,0.2); }
-        .social-links { display: flex; justify-content: center; gap: 20px; font-size: 24px; margin-bottom: 10px; }
-        .social-links a { transition: transform 0.2s; }
-        .social-links a:hover { transform: scale(1.1); }
-        .social-links .fb { color: #1877f2; }
-        .social-links .yt { color: #ff0000; }
-        .social-links .tt { color: #000000; }
-        .social-links .pin { color: #bd081c; }
-        
-        /* AI Chatbot Button & Box */
-        .ai-btn { position: fixed; bottom: 20px; right: 20px; background: #0084ff; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,84,255,0.3); cursor: pointer; z-index: 1000; }
-        .ai-chat-box { position: fixed; bottom: 85px; right: 20px; width: 300px; height: 380px; background: white; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); display: none; flex-direction: column; overflow: hidden; z-index: 1000; border: 1px solid #eee; }
-        .ai-chat-header { background: #0084ff; color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-        .ai-chat-messages { flex: 1; padding: 10px; overflow-y: auto; font-size: 13px; background: #f7f9fb; }
-        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; max-width: 85%; line-height: 18px; }
-        .msg.bot { background: white; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .msg.user { background: #0084ff; color: white; margin-left: auto; }
-        .ai-chat-input { display: flex; border-top: 1px solid #eee; padding: 5px; background: white; }
-        .ai-chat-input input { flex: 1; border: none; padding: 8px; outline: none; font-size: 13px; }
-        .ai-chat-input button { background: #0084ff; color: white; border: none; padding: 0 12px; border-radius: 6px; cursor: pointer; }
-
-        .footer-admin { text-align: center; padding: 15px 0; font-size: 11px; color: #aaa; background: #f4f4f6; }
-        .footer-admin a { color: #aaa; text-decoration: none; }
-    </style>
-</head> 
-    <style>
-.offer-btn{
-    display:inline-block;
-    padding:16px 40px;
-    background:linear-gradient(45deg,#ff3d00,#ff9800);
-    color:#fff;
-    font-size:24px;
-    font-weight:bold;
-    text-decoration:none;
-    border-radius:50px;
-    box-shadow:0 8px 20px rgba(0,0,0,.3);
-    animation:pulse 1.2s infinite;
-}
-@keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(255,61,0,.7);}
-    70%{box-shadow:0 0 0 20px rgba(255,61,0,0);}
-    100%{box-shadow:0 0 0 0 rgba(255,61,0,0);}
-}
+    .footer-admin { text-align: center; padding: 15px 0; font-size: 11px; color: #aaa; background: #f4f4f6; }
+    .footer-admin a { color: #aaa; text-decoration: none; }
 </style>
+<!-- 1-Second Vertical 9:16 App Open Splash Screen (Blogger Image URL) -->
+<div id="splash-screen">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgk_G85M9T6DEuJDkxBMytfLOM1WK7u7aImPhFBugWmk8ki63uzFFEsyoUE244tlM_8SZZhvQtuD-eEBgEVhWkFZ2ALxFhiJ1AzrGEGRYibl0AxATVp0SeZOK4Rq-8MW3U0Mqx9UDZwuLxUyXn5aGVczDvmwmHSZT45UAsOZXpy7I6w9585aTtptWUuTvE/s1600/ChatGPT%20Image%20Jul%2013,%202026,%2009_56_27%20PM.png" alt="Daraz App Open">
+</div>
 
-<center>
-<a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="offer-btn">
-🔥 GET 70% DISCOUNT 🔥
-</a>
-</center>
-<body>
+<div id="main-content">
+    <!-- Header (Logo redirects to your Direct Link) -->
+    <div class="header">
+        <div class="top-bar">
+            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="logo"><i class="fa-solid fa-bolt"></i> Daraz Bangladesh</a>
+            <span style="font-size: 11px; color: #666;"><i class="fa-solid fa-truck-fast" style="color:#00b74a;"></i> ফাস্ট ডেলিভারি</span>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="আপনার পছন্দের প্রোডাক্টটি খুঁজুন..." onkeyup="searchProducts()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+    </div>
+
+    <!-- Notice Bar -->
+    <div class="notice-bar">
+        <i class="fa-solid fa-gift"></i> [ফ্রি ডেলিভারি ও ৫০০ ৳ ক্যাশব্যাক ভাউচার] ধামাকা অফারে কেনাকাটা করুন!
+    </div>
+
+    <!-- Top Custom Promo Banner -->
+    <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4EdPe8fZsc612WiiYkusLZHf96L_ZIi1LnbV_MFhysZyBTV0TfAxba0wammhGm9Fpx8GiI4mhDbfwgk_KOrtxH0ColOUb2jTwGN9NfNRXNTooVbmtbXYsB2Hv3m1QhfJvNnBRYb2xnIeovLbWvAKRjJl_26bjmmAfCeLCfddOBN-G1es-tjbDEnRiqXI/s1536/ChatGPT%20Image%20Jul%2013,%202026,%2009_44_58%20PM.png" class="hero-banner" alt="Exclusive Offer">
+    </a>
+
+    <!-- Center 50% Off Action Button -->
+    <div class="special-container-box">
+        <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="action-link-btn">
+            🔥 সীমিত সময়ের অফার: ৫০% ছাড়ে কিনতে ক্লিক করুন!
+        </a>
+    </div>
+
+    <!-- Thin Banner Middle Ad (320x50) -->
+    <div class="ad-slot-middle">
+        <script>
+            atOptions = {
+                'key' : '0954ebc33c055a57db1b0016759fbd35',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script src="https://www.highperformanceformat.com/0954ebc33c055a57db1b0016759fbd35/invoke.js"></script>
+    </div>
+
+    <!-- Flash Sale Section Title -->
+    <div class="section-title">
+        <i class="fa-solid fa-fire" style="color: red;"></i> ফ্ল্যাশ সেল (Flash Sale)
+    </div>
 <style>
 .discount-btn {
     display: inline-block;
@@ -183,247 +206,234 @@
     <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="discount-btn">
         🎉 60% ছাড় পেতে ক্লিক করুন
     </a>
-</div> 
-    <script>
-  atOptions = {
-    'key' : '0954ebc33c055a57db1b0016759fbd35',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/0954ebc33c055a57db1b0016759fbd35/invoke.js"></script>
-    <!-- 9:16 App Open Splash Screen (Updated Image URL) -->
-    <div id="splash-screen">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgk_G85M9T6DEuJDkxBMytfLOM1WK7u7aImPhFBugWmk8ki63uzFFEsyoUE244tlM_8SZZhvQtuD-eEBgEVhWkFZ2ALxFhiJ1AzrGEGRYibl0AxATVp0SeZOK4Rq-8MW3U0Mqx9UDZwuLxUyXn5aGVczDvmwmHSZT45UAsOZXpy7I6w9585aTtptWUuTvE/s1600/ChatGPT%20Image%20Jul%2013,%202026,%2009_56_27%20PM.png" alt="Daraz App Open">
+</div>
+    <!-- Unlimited 4 to 6 Column Responsive Product Container -->
+    <div class="product-grid" id="productContainer">
+        <div style="grid-column: 1/-1; text-align: center; color: #888; padding: 30px;">প্রোডাক্ট লোড হচ্ছে...</div>
     </div>
 
-    <div id="main-content">
-        <!-- Header (Logo updated to Redirect Ad Link) -->
-        <div class="header">
-            <div class="top-bar">
-                <a href="https://your-direct-ad-link.com" target="_blank" class="logo"><i class="fa-solid fa-bolt"></i> Daraz Bangladesh</a>
-                <span style="font-size: 11px; color: #666;"><i class="fa-solid fa-truck-fast" style="color:#00b74a;"></i> ফাস্ট ডেলিভারি</span>
-            </div>
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="আপনার পছন্দের প্রোডাক্টটি খুঁজুন..." onkeyup="searchProducts()">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
+    <!-- Special Offers Video Section (YouTube Shorts Video Setup) -->
+    <div class="section-title">
+        <i class="fa-solid fa-circle-play" style="color: #ff0000;"></i> আজকের ধামাকা অফার ভিডিও
+    </div>
+    <div class="video-container">
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/Q-8cio5WR4g" allowfullscreen></iframe>
         </div>
+    </div>
 
-        <!-- Notice Bar -->
-        <div class="notice-bar">
-            <i class="fa-solid fa-gift"></i> [ফ্রি ডেলিভারি ও ৫০০ ৳ ক্যাশব্যাক ভাউচার] ধামাকা অফারে কেনাকাটা করুন!
-        </div>
-
-        <!-- Top Custom Promo Banner (Updated Image URL) -->
-        <a href="https://your-direct-ad-link.com" target="_blank">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4EdPe8fZsc612WiiYkusLZHf96L_ZIi1LnbV_MFhysZyBTV0TfAxba0wammhGm9Fpx8GiI4mhDbfwgk_KOrtxH0ColOUb2jTwGN9NfNRXNTooVbmtbXYsB2Hv3m1QhfJvNnBRYb2xnIeovLbWvAKRjJl_26bjmmAfCeLCfddOBN-G1es-tjbDEnRiqXI/s1536/ChatGPT%20Image%20Jul%2013,%202026,%2009_44_58%20PM.png" class="banner" alt="Exclusive Offer">
+    <!-- Partner Brand / Footer Image Section (AdBlock Proofed) -->
+    <div class="partner-footer-box">
+        <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4EdPe8fZsc612WiiYkusLZHf96L_ZIi1LnbV_MFhysZyBTV0TfAxba0wammhGm9Fpx8GiI4mhDbfwgk_KOrtxH0ColOUb2jTwGN9NfNRXNTooVbmtbXYsB2Hv3m1QhfJvNnBRYb2xnIeovLbWvAKRjJl_26bjmmAfCeLCfddOBN-G1es-tjbDEnRiqXI/s1536/ChatGPT%20Image%20Jul%2013,%202026,%2009_44_58%20PM.png" alt="Footer Banner">
         </a>
+    </div>
 
-        <!-- Center 50% Off Direct Link Button -->
-        <div class="promo-button-container">
-            <a href="https://your-direct-ad-link.com" target="_blank" class="direct-ad-btn">
-                🔥 সীমিত সময়ের অফার: ৫০% ছাড়ে কিনতে ক্লিক করুন!
-            </a>
-        </div>
-
-        <!-- Flash Sale Section Title -->
-        <div class="section-title">
-            <i class="fa-solid fa-fire" style="color: red;"></i> ফ্ল্যাশ সেল (Flash Sale)
-        </div>
-
-        <!-- Unlimited 4 to 6 Column Responsive Product Container -->
-        <div class="product-grid" id="productContainer">
-            <div style="grid-column: 1/-1; text-align: center; color: #888; padding: 30px;">প্রোডাক্ট লোড হচ্ছে...</div>
-        </div>
-
-        <!-- Special Offers Video Section (9:16 Shorts Video Setup) -->
-        <div class="section-title">
-            <i class="fa-solid fa-circle-play" style="color: #ff0000;"></i> আজকের ধামাকা অফার ভিডিও
-        </div>
-        <div class="video-container">
-            <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/Q-8cio5WR4g" allowfullscreen></iframe>
-            </div>
+    <!-- Large Banner & Leaderboard Ads at the Bottom -->
+    <div class="ad-slot-bottom">
+        <!-- 300x250 Large Rectangle Ad -->
+        <div style="display: flex; justify-content: center;">
+            <script>
+                atOptions = {
+                    'key' : '5dc6a2af6991b7938e46dfda9e7cc30f',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                };
+            </script>
+            <script src="https://www.highperformanceformat.com/5dc6a2af6991b7938e46dfda9e7cc30f/invoke.js"></script>
         </div>
 
-        <!-- Bottom Ad Banner Section (Updated Image URL) -->
-        <div class="ad-banner-footer">
-            <a href="https://your-direct-ad-link.com" target="_blank">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4EdPe8fZsc612WiiYkusLZHf96L_ZIi1LnbV_MFhysZyBTV0TfAxba0wammhGm9Fpx8GiI4mhDbfwgk_KOrtxH0ColOUb2jTwGN9NfNRXNTooVbmtbXYsB2Hv3m1QhfJvNnBRYb2xnIeovLbWvAKRjJl_26bjmmAfCeLCfddOBN-G1es-tjbDEnRiqXI/s1536/ChatGPT%20Image%20Jul%2013,%202026,%2009_44_58%20PM.png" alt="Footer Ad">
-            </a>
-        </div>
-
-        <!-- Social Links & App Download Button Section -->
-        <div class="footer-social-section">
-            <a href="https://www.appcreator24.com/app4117509-d3q8rk" target="_blank" class="download-app-btn">
-                <i class="fa-solid fa-cloud-arrow-down"></i> Download app Free
-            </a>
-            <div class="social-links">
-                <a href="https://www.facebook.com/share/1HAbWSoTB5/" target="_blank" class="fb"><i class="fa-brands fa-facebook"></i></a>
-                <a href="https://www.youtube.com/@darazbangladesh2026" target="_blank" class="yt"><i class="fa-brands fa-youtube"></i></a>
-                <a href="https://tiktok.com/@daraz.bangladesh2026" target="_blank" class="tt"><i class="fa-brands fa-tiktok"></i></a>
-                <a href="https://pin.it/7agwjvoWH" target="_blank" class="pin"><i class="fa-brands fa-pinterest"></i></a>
-            </div>
-        </div>
-
-        <!-- AI Chatbot Element -->
-        <div class="ai-btn" onclick="toggleAIChat()">
-            <i class="fa-solid fa-comments fa-lg"></i>
-        </div>
-        <div class="ai-chat-box" id="aiChatBox">
-            <div class="ai-chat-header">
-                <span><i class="fa-solid fa-robot"></i> Daraz AI সহকারী</span>
-                <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAIChat()"></i>
-            </div>
-            <div class="ai-chat-messages" id="chatMessages">
-                <div class="msg bot">আসসালামু আলাইকুম! Daraz Bangladesh-এ আপনাকে স্বাগতম। আমি আপনাকে কীভাবে সাহায্য করতে পারি? 😊</div>
-            </div>
-            <div class="ai-chat-input">
-                <input type="text" id="chatInput" placeholder="এখানে লিখুন..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
-                <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-            </div>
-        </div>
-
-        <!-- Footer Control Panel -->
-        <div class="footer-admin">
-            &copy; 2026 Daraz Shop | <a href="admin.html" target="_blank"><i class="fa-solid fa-user-gear"></i> Control Panel</a>
+        <!-- 728x90 Leaderboard Ad -->
+        <div style="display: flex; justify-content: center; width: 100%;">
+            <script>
+                atOptions = {
+                    'key' : 'b1ea071a36d532c5c71d427f548a748f',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script src="https://www.highperformanceformat.com/b1ea071a36d532c5c71d427f548a748f/invoke.js"></script>
         </div>
     </div>
 
-    <script>
-        // Splash Screen Timer Script (1 Second)
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                const content = document.getElementById('main-content');
-                splash.style.opacity = '0';
-                splash.style.visibility = 'hidden';
-                content.style.opacity = '1';
-                document.body.style.overflow = 'auto';
-            }, 1000);
-        });
+    <!-- Footer App Download Button & Social Layout -->
+    <div class="footer-social-section">
+        <a href="https://www.appcreator24.com/app4117509-d3q8rk" target="_blank" class="download-app-btn">
+            <i class="fa-solid fa-cloud-arrow-down"></i> Download app Free
+        </a>
+        <div class="social-links">
+            <a href="https://www.facebook.com/share/1HAbWSoTB5/" target="_blank" class="fb"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.youtube.com/@darazbangladesh2026" target="_blank" class="yt"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://tiktok.com/@daraz.bangladesh2026" target="_blank" class="tt"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://pin.it/7agwjvoWH" target="_blank" class="pin"><i class="fa-brands fa-pinterest"></i></a>
+        </div>
+    </div>
 
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
-            authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
-            projectId: "daraz-bangladesh-6a0f8",
-            storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
-            messagingSenderId: "133315105065",
-            appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+    <!-- AI Chatbot Button & Box -->
+    <div class="ai-btn" onclick="toggleAIChat()">
+        <i class="fa-solid fa-robot"></i>
+        <span>AI</span>
+    </div>
+    <div class="ai-chat-box" id="aiChatBox">
+        <div class="ai-chat-header">
+            <span><i class="fa-solid fa-robot"></i> Daraz AI সহকারী</span>
+            <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleAIChat()"></i>
+        </div>
+        <div class="ai-chat-messages" id="chatMessages">
+            <div class="msg bot">আসসালামু আলাইকুম! Daraz Bangladesh-এ আপনাকে স্বাগতম। আমি আপনাকে কীভাবে সাহায্য করতে পারি? 😊</div>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="chatInput" placeholder="এখানে লিখুন..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
 
-        let allProducts = [];
+    <!-- Footer Control Panel -->
+    <div class="footer-admin">
+        &copy; 2026 Daraz Shop | <a href="admin.html" target="_blank"><i class="fa-solid fa-user-gear"></i> Control Panel</a>
+    </div>
+</div>
+<style>
+.offer-btn{
+    display:inline-block;
+    padding:16px 40px;
+    background:linear-gradient(45deg,#ff3d00,#ff9800);
+    color:#fff;
+    font-size:24px;
+    font-weight:bold;
+    text-decoration:none;
+    border-radius:50px;
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+    animation:pulse 1.2s infinite;
+}
+@keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(255,61,0,.7);}
+    70%{box-shadow:0 0 0 20px rgba(255,61,0,0);}
+    100%{box-shadow:0 0 0 0 rgba(255,61,0,0);}
+}
+</style>
 
-        function loadProducts() {
-            db.collection("products").orderBy("createdAt", "desc").get().then((querySnapshot) => {
-                const container = document.getElementById('productContainer');
-                container.innerHTML = "";
-                allProducts = [];
+<center>
+<a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="offer-btn">
+🔥 GET 70% DISCOUNT 🔥
+</a>
+</center>
+<script>
+    // Splash Screen Timer Script (1 Second)
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            const content = document.getElementById('main-content');
+            splash.style.opacity = '0';
+            splash.style.visibility = 'hidden';
+            content.style.opacity = '1';
+            document.body.style.overflow = 'auto';
+        }, 1000);
+    });
 
-                if(querySnapshot.empty) {
-                    container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888;'>কোনো প্রোডাক্ট পাওয়া যায়নি। এডমিন প্যানেল থেকে এড করুন।</div>";
-                    return;
-                }
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
+        authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
+        projectId: "daraz-bangladesh-6a0f8",
+        storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
+        messagingSenderId: "133315105065",
+        appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-                querySnapshot.forEach((doc) => {
-                    const p = doc.data();
-                    p.id = doc.id;
-                    allProducts.push(p);
-                });
-                
-                displayProducts(allProducts);
-            });
-        }
+    let allProducts = [];
 
-        function displayProducts(products) {
+    function loadProducts() {
+        db.collection("products").orderBy("createdAt", "desc").get().then((querySnapshot) => {
             const container = document.getElementById('productContainer');
             container.innerHTML = "";
-            
-            if(products.length === 0) {
-                container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888; padding:20px;'>কোনো প্রোডাক্ট মেলেনি!</div>";
+            allProducts = [];
+
+            if(querySnapshot.empty) {
+                container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888;'>কোনো প্রোডাক্ট পাওয়া যায়নি। এডমিন প্যানেল থেকে এড করুন।</div>";
                 return;
             }
 
-            products.forEach((product) => {
-                const oldPriceMarkup = (product.oldPrice && product.oldPrice !== "0") ? `<span class="old-price">৳ ${product.oldPrice}</span>` : '';
-                const codMarkup = product.isCodAvailable ? `<div class="cod-tag">ক্যাশ অন ডেলিভারি</div>` : '';
-                
-                container.innerHTML += `
-                    <div class="product-card">
-                        <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" class="product-img" alt="">
-                        <div class="product-info">
-                            <div>
-                                <div class="product-name">${product.name}</div>
-                                <div class="price-row">
-                                    <span class="current-price">৳ ${product.price}</span>
-                                    ${oldPriceMarkup}
-                                </div>
-                                ${codMarkup}
-                            </div>
-                            <a href="order.html?id=${product.id}" class="order-btn"><i class="fa-solid fa-basket-shopping"></i> অর্ডার করুন</a>
-                        </div>
-                    </div>
-                `;
+            querySnapshot.forEach((doc) => {
+                const p = doc.data();
+                p.id = doc.id;
+                allProducts.push(p);
             });
+            
+            displayProducts(allProducts);
+        });
+    }
+
+    function displayProducts(products) {
+        const container = document.getElementById('productContainer');
+        container.innerHTML = "";
+        
+        if(products.length === 0) {
+            container.innerHTML = "<div style='grid-column:1/-1; text-align:center; color:#888; padding:20px;'>কোনো প্রোডাক্ট মেলেনি!</div>";
+            return;
         }
 
-        function searchProducts() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
-            displayProducts(filtered);
-        }
+        products.forEach((product) => {
+            const oldPriceMarkup = (product.oldPrice && product.oldPrice !== "0") ? `<span class="old-price">৳ ${product.oldPrice}</span>` : '';
+            const codMarkup = product.isCodAvailable ? `<div class="cod-tag">ক্যাশ অন ডেলিভারি</div>` : '';
+            
+            container.innerHTML += `
+                <div class="product-card">
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" class="product-img" alt="">
+                    <div class="product-info">
+                        <div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="price-row">
+                                <span class="current-price">৳ ${product.price}</span>
+                                ${oldPriceMarkup}
+                            </div>
+                            ${codMarkup}
+                        </div>
+                        <a href="order.html?id=${product.id}" class="order-btn"><i class="fa-solid fa-basket-shopping"></i> অর্ডার করুন</a>
+                    </div>
+                </div>
+            `;
+        });
+    }
 
-        // Chatbot Controls
-        function toggleAIChat() {
-            const box = document.getElementById('aiChatBox');
-            box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'flex' : 'none';
-        }
+    // Search Control
+    function searchProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
+        displayProducts(filtered);
+    }
 
-        function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if(!text) return;
+    // Chatbot Controls
+    function toggleAIChat() {
+        const box = document.getElementById('aiChatBox');
+        box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'flex' : 'none';
+    }
 
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML += `<div class="msg user">${text}</div>`;
-            input.value = "";
+    function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if(!text) return;
+
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML += `<div class="msg user">${text}</div>`;
+        input.value = "";
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        setTimeout(() => {
+            let reply = "আপনার বার্তার জন্য ধন্যবাদ। যেকোনো প্রোডাক্ট অর্ডার করতে তার নিচের 'অর্ডার করুন' বাটনে ক্লিক করে ফর্মটি পূরণ করুন।";
+            chatMessages.innerHTML += `<div class="msg bot">${reply}</div>`;
             chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 800);
+    }
 
-            setTimeout(() => {
-                let reply = "আপনার বার্তার জন্য ধন্যবাদ। যেকোনো প্রোডাক্ট অর্ডার করতে তার নিচের 'অর্ডার করুন' বাটনে ক্লিক করে ফর্মটি পূরণ করুন।";
-                chatMessages.innerHTML += `<div class="msg bot">${reply}</div>`;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 800);
-        }
+    window.onload = loadProducts;
+</script>
 
-        window.onload = loadProducts;
-    </script>
-</body> 
-    <script>
-  atOptions = {
-    'key' : '0954ebc33c055a57db1b0016759fbd35',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/0954ebc33c055a57db1b0016759fbd35/invoke.js"></script>
-</html> 
-<script>
-  atOptions = {
-    'key' : '0954ebc33c055a57db1b0016759fbd35',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://www.highperformanceformat.com/0954ebc33c055a57db1b0016759fbd35/invoke.js"></script>
+<!-- Adsterra Popunder Script Integration -->
 <script src="https://pl30320118.effectivecpmnetwork.com/e3/ef/16/e3ef1602ca15334e4445c71c53892196.js"></script>
