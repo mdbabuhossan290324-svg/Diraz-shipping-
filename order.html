@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>অর্ডার সম্পন্ন করুন</title>
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         body { font-family: sans-serif; background: #f4f4f6; padding: 15px; }
         .order-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .product-img { width: 100px; height: 100px; object-fit: cover; display: block; margin: 0 auto 15px auto; border-radius: 8px; border: 1px solid #eee; }
+        .product-img { width: 100%; max-width: 250px; height: 250px; display: block; margin: 0 auto 15px auto; border-radius: 8px; border: 1px solid #eee; object-fit: contain; }
         .submit-btn { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; }
         .method-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 6px; display: block; cursor: pointer; font-weight: bold; }
         .success-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display:none; justify-content:center; align-items:center; z-index:9999; }
@@ -19,22 +20,23 @@
 <body>
 
     <div class="order-container">
-        <img id="productImg" src="https://placehold.co/100x100/eee/333?text=Loading..." class="product-img" alt="Product">
-        <h2 id="pName" style="color: #f85606; font-size: 18px; text-align: center;">অর্ডার সম্পন্ন করুন</h2>
+        <img id="productImg" src="https://placehold.co/200x200/eee/333?text=Loading..." class="product-img" alt="Product">
+        <h2 id="pName" style="color: #f85606; font-size: 18px; text-align: center; margin-bottom: 20px;">লোডিং...</h2>
+        
         <form id="orderForm">
             <input type="text" id="custName" placeholder="আপনার পুরো নাম" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
-            <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
+            <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর (১১ ডিজিট)" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
             <textarea id="custAddress" placeholder="আপনার ঠিকানা (থানা, জেলা)" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; height:80px; box-sizing:border-box;"></textarea>
             
             <p style="font-weight:bold; margin-top:15px;">পেমেন্ট মেথড:</p>
             <label class="method-card">
-                <input type="radio" name="pay" value="COD" checked> ক্যাশ অন ডেলিভারি
+                <input type="radio" name="pay" value="Cash on Delivery" checked> ক্যাশ অন ডেলিভারি
             </label>
             <label class="method-card">
                 <input type="radio" name="pay" value="Nagad"> নগদ (Send Money)
             </label>
             <label class="method-card">
-                <input type="radio" name="pay" value="DBBL"> রকেট (DBBL)
+                <input type="radio" name="pay" value="Rocket"> রকেট (DBBL)
             </label>
 
             <button type="submit" class="submit-btn" id="submitBtn">অর্ডার নিশ্চিত করুন</button>
@@ -50,6 +52,9 @@
     </div>
 
     <script>
+        // আপনার গুগল শিট লিংক
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcKRpC9bSFSYFqTIQVeOJk3ePjt2w10UgZbAzd7WmRwWurUSQ28MuERRfbffrPwRTl/exec";
+
         const firebaseConfig = {
             apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
             authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
@@ -64,7 +69,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const pid = urlParams.get('id');
 
-        // Fetching product details
         if(pid) {
             db.collection("products").doc(pid).get().then(doc => {
                 if(doc.exists) {
@@ -74,22 +78,38 @@
             });
         }
 
-        // Submitting order
         document.getElementById('orderForm').onsubmit = function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             btn.innerText = "প্রসেস হচ্ছে...";
             btn.disabled = true;
 
-            db.collection("orders").add({
-                productName: document.getElementById('pName').innerText,
+            const orderData = {
                 customerName: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value,
                 address: document.getElementById('custAddress').value,
-                paymentMethod: document.querySelector('input[name="pay"]:checked').value,
+                productName: document.getElementById('pName').innerText,
+                paymentMethod: document.querySelector('input[name="pay"]:checked').value
+            };
+
+            // ১. ফায়ারবেসে ডাটা পাঠানো
+            db.collection("orders").add({
+                ...orderData,
                 createdAt: new Date()
             }).then(() => {
-                document.getElementById('successOverlay').style.display = 'flex';
+                // ২. গুগল শিটে ডাটা পাঠানো
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                }).then(() => {
+                    document.getElementById('successOverlay').style.display = 'flex';
+                }).catch(() => {
+                    // শিটে এরর হলেও ফায়ারবেসে যেহেতু জমা হয়েছে, তাই সফল দেখাচ্ছি
+                    document.getElementById('successOverlay').style.display = 'flex';
+                });
             }).catch(err => {
                 alert("এরর: " + err.message);
                 btn.innerText = "আবার চেষ্টা করুন";
