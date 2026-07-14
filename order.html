@@ -9,7 +9,8 @@
     <style>
         body { font-family: sans-serif; background: #f4f4f6; padding: 15px; }
         .order-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .submit-btn { width: 100%; padding: 15px; background: #00b74a; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; }
+        .product-img { width: 100px; height: 100px; object-fit: cover; display: block; margin: 0 auto 15px auto; border-radius: 8px; border: 1px solid #eee; }
+        .submit-btn { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; }
         .method-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 6px; display: block; cursor: pointer; font-weight: bold; }
         .success-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display:none; justify-content:center; align-items:center; z-index:9999; }
         .success-card { background: white; padding: 30px; border-radius: 12px; text-align: center; }
@@ -18,7 +19,8 @@
 <body>
 
     <div class="order-container">
-        <h2 id="pName" style="color: #f85606; font-size: 18px;">অর্ডার সম্পন্ন করুন</h2>
+        <img id="productImg" src="https://placehold.co/100x100/eee/333?text=Loading..." class="product-img" alt="Product">
+        <h2 id="pName" style="color: #f85606; font-size: 18px; text-align: center;">অর্ডার সম্পন্ন করুন</h2>
         <form id="orderForm">
             <input type="text" id="custName" placeholder="আপনার পুরো নাম" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
             <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
@@ -41,7 +43,7 @@
 
     <div class="success-overlay" id="successOverlay">
         <div class="success-card">
-            <h2 style="color: #00b74a;">অর্ডার সফল!</h2>
+            <h2 style="color: #28a745;">অর্ডার সফল!</h2>
             <p>আপনার অর্ডারটি আমরা পেয়েছি।</p>
             <button onclick="window.location.href='index.html'" style="padding:10px 20px; background:#f85606; color:white; border:none; border-radius:5px; margin-top:10px;">হোম পেজে ফিরে যান</button>
         </div>
@@ -62,12 +64,17 @@
         const urlParams = new URLSearchParams(window.location.search);
         const pid = urlParams.get('id');
 
+        // Fetching product details
         if(pid) {
             db.collection("products").doc(pid).get().then(doc => {
-                if(doc.exists) document.getElementById('pName').innerText = doc.data().name;
+                if(doc.exists) {
+                    document.getElementById('pName').innerText = doc.data().name;
+                    document.getElementById('productImg').src = doc.data().imageUrl;
+                }
             });
         }
 
+        // Submitting order
         document.getElementById('orderForm').onsubmit = function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
