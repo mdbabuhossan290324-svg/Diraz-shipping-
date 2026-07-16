@@ -3,116 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অর্ডার সম্পন্ন করুন</title>
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <title>অর্ডার সম্পন্ন করুন - Daraz Bangladesh Affiliate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: sans-serif; background: #f4f4f6; padding: 15px; }
-        .order-container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .product-img { width: 100%; max-width: 250px; height: 250px; display: block; margin: 0 auto 15px auto; border-radius: 8px; border: 1px solid #eee; object-fit: contain; }
-        .submit-btn { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 15px; }
-        .method-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 6px; display: block; cursor: pointer; font-weight: bold; }
-        .success-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display:none; justify-content:center; align-items:center; z-index:9999; }
-        .success-card { background: white; padding: 30px; border-radius: 12px; text-align: center; }
+        .custom-orange { color: #f85606; }
+        .bg-orange-daraz { background-color: #f85606; }
+        .bkash-color { border-color: #e2136e; }
+        .nagad-color { border-color: #ff3e39; }
+        .card-color { border-color: #3b82f6; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 pb-10">
 
-    <div class="order-container">
-        <img id="productImg" src="https://placehold.co/200x200/eee/333?text=Loading..." class="product-img" alt="Product">
-        <h2 id="pName" style="color: #f85606; font-size: 18px; text-align: center; margin-bottom: 20px;">লোডিং...</h2>
-        
-        <form id="orderForm">
-            <input type="text" id="custName" placeholder="আপনার পুরো নাম" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
-            <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর (১১ ডিজিট)" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; box-sizing:border-box;">
-            <textarea id="custAddress" placeholder="আপনার ঠিকানা (থানা, জেলা)" required style="width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:4px; height:80px; box-sizing:border-box;"></textarea>
-            
-            <p style="font-weight:bold; margin-top:15px;">পেমেন্ট মেথড:</p>
-            <label class="method-card">
-                <input type="radio" name="pay" value="Cash on Delivery" checked> ক্যাশ অন ডেলিভারি
-            </label>
-            <label class="method-card">
-                <input type="radio" name="pay" value="Nagad"> নগদ (Send Money)
-            </label>
-            <label class="method-card">
-                <input type="radio" name="pay" value="Rocket"> রকেট (DBBL)
-            </label>
+    <div class="max-w-2xl mx-auto p-4">
+        <!-- প্রোডাক্ট সামারি -->
+        <div class="bg-white p-4 rounded-lg shadow-sm flex gap-4 mb-4">
+            <img id="productImg" src="https://placehold.co/100x100/eee/333?text=Product" class="w-20 h-20 object-cover rounded" alt="Product">
+            <div>
+                <h2 id="pName" class="text-sm font-medium text-gray-800 mb-1">লোড হচ্ছে...</h2>
+                <div class="text-lg font-bold custom-orange">৳ <span id="pPrice">0</span></div>
+            </div>
+        </div>
 
-            <button type="submit" class="submit-btn" id="submitBtn">অর্ডার নিশ্চিত করুন</button>
+        <form id="orderForm" class="space-y-4">
+            <!-- ডেলিভারি ঠিকানা -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h3 class="text-md font-bold mb-3 border-b pb-2">ডেলিভারি ঠিকানা</h3>
+                <input type="text" id="custName" placeholder="আপনার নাম" class="w-full p-2 border rounded mb-2 text-sm" required>
+                <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর" class="w-full p-2 border rounded mb-2 text-sm" required>
+                <textarea id="custAddress" placeholder="আপনার সম্পূর্ণ ঠিকানা" class="w-full p-2 border rounded text-sm h-20 mb-3" required></textarea>
+                
+                <div class="flex gap-4">
+                    <label class="flex items-center text-sm border p-2 rounded cursor-pointer w-1/2 justify-center">
+                        <input type="radio" name="addrType" value="Home" checked class="mr-2"> বাসা (Home)
+                    </label>
+                    <label class="flex items-center text-sm border p-2 rounded cursor-pointer w-1/2 justify-center">
+                        <input type="radio" name="addrType" value="Office" class="mr-2"> অফিস (Office)
+                    </label>
+                </div>
+            </div>
+
+            <!-- পেমেন্ট মেথড -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h3 class="text-md font-bold mb-3 border-b pb-2">পেমেন্ট মেথড</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center p-3 border rounded cursor-pointer hover:bg-gray-50">
+                        <input type="radio" name="pay" value="Cash on Delivery" checked onchange="togglePaymentFields()">
+                        <span class="ml-2 text-sm font-semibold">ক্যাশ অন ডেলিভারি</span>
+                    </label>
+                    
+                    <label class="flex items-center p-3 border-2 bkash-color rounded cursor-pointer hover:bg-pink-50">
+                        <input type="radio" name="pay" value="bKash" onchange="togglePaymentFields()">
+                        <span class="ml-2 text-sm font-semibold text-pink-600">বিকাশ (bKash)</span>
+                    </label>
+                    
+                    <label class="flex items-center p-3 border-2 nagad-color rounded cursor-pointer hover:bg-orange-50">
+                        <input type="radio" name="pay" value="Nagad" onchange="togglePaymentFields()">
+                        <span class="ml-2 text-sm font-semibold text-orange-600">নগদ (Nagad)</span>
+                    </label>
+                    
+                    <label class="flex items-center p-3 border-2 card-color rounded cursor-pointer hover:bg-blue-50">
+                        <input type="radio" name="pay" value="Card" onchange="togglePaymentFields()">
+                        <span class="ml-2 text-sm font-semibold text-blue-600">ডেবিট ও ক্রেডিট কার্ড</span>
+                    </label>
+
+                    <!-- পেমেন্ট ডিটেইলস কন্টেইনার -->
+                    <div id="paymentDetails" class="hidden p-4 bg-gray-50 rounded border-l-4 border-gray-400 mt-2">
+                        <p id="paymentInstruction" class="text-xs text-gray-700 mb-2 font-bold"></p>
+                        
+                        <div id="mfsFields">
+                            <div class="bg-white p-2 rounded border border-dashed border-gray-400 text-center text-gray-800 font-bold mb-3 text-lg select-all">01707059868</div>
+                            <input type="text" id="payNumber" placeholder="আপনার সেন্ড মানি করা নাম্বার" class="w-full p-2 border rounded mb-2 text-sm">
+                            <input type="text" id="trxId" placeholder="ট্রানজেকশন আইডি (TrxID)" class="w-full p-2 border rounded text-sm">
+                        </div>
+
+                        <div id="cardFields" class="hidden">
+                            <input type="text" placeholder="কার্ড নম্বর (১৬ ডিজিট)" class="w-full p-2 border rounded mb-2 text-sm">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="MM/YY" class="w-full p-2 border rounded mb-2 text-sm">
+                                <input type="text" placeholder="CVV" class="w-full p-2 border rounded mb-2 text-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- অর্ডার সামারি -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h3 class="text-md font-bold mb-3 border-b pb-2">অর্ডার সামারি</h3>
+                <div class="flex justify-between text-sm mb-1"><span>পণ্যের দাম</span> <span id="subTotal">৳ 0</span></div>
+                <div class="flex justify-between text-sm mb-1"><span>ডেলিভারি চার্জ</span> <span>৳ 45</span></div>
+                <div class="flex justify-between text-sm mb-2"><span>অন্যান্য ফি</span> <span>৳ 20</span></div>
+                <div class="flex justify-between font-bold text-lg border-t pt-2 custom-orange">
+                    <span>মোট প্রদানযোগ্য</span> <span id="totalAmount">৳ 0</span>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full bg-orange-daraz text-white py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-orange-600 transition">অর্ডার নিশ্চিত করুন</button>
         </form>
     </div>
 
-    <div class="success-overlay" id="successOverlay">
-        <div class="success-card">
-            <h2 style="color: #28a745;">অর্ডার সফল!</h2>
-            <p>আপনার অর্ডারটি আমরা পেয়েছি।</p>
-            <button onclick="window.location.href='index.html'" style="padding:10px 20px; background:#f85606; color:white; border:none; border-radius:5px; margin-top:10px;">হোম পেজে ফিরে যান</button>
-        </div>
-    </div>
-
     <script>
-        // আপনার গুগল শিট লিংক
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcKRpC9bSFSYFqTIQVeOJk3ePjt2w10UgZbAzd7WmRwWurUSQ28MuERRfbffrPwRTl/exec";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
-            authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
-            projectId: "daraz-bangladesh-6a0f8",
-            storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
-            messagingSenderId: "133315105065",
-            appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
+        
         const urlParams = new URLSearchParams(window.location.search);
-        const pid = urlParams.get('id');
+        const pName = urlParams.get('name') || "প্রোডাক্ট";
+        const pPrice = parseInt(urlParams.get('price')) || 0;
 
-        if(pid) {
-            db.collection("products").doc(pid).get().then(doc => {
-                if(doc.exists) {
-                    document.getElementById('pName').innerText = doc.data().name;
-                    document.getElementById('productImg').src = doc.data().imageUrl;
+        document.getElementById('pName').innerText = pName;
+        document.getElementById('pPrice').innerText = pPrice;
+        document.getElementById('subTotal').innerText = "৳ " + pPrice;
+        document.getElementById('totalAmount').innerText = "৳ " + (pPrice + 45 + 20);
+
+        function togglePaymentFields() {
+            const method = document.querySelector('input[name="pay"]:checked').value;
+            const container = document.getElementById('paymentDetails');
+            const instruction = document.getElementById('paymentInstruction');
+            const mfsFields = document.getElementById('mfsFields');
+            const cardFields = document.getElementById('cardFields');
+            
+            if (method !== 'Cash on Delivery') {
+                container.classList.remove('hidden');
+                if(method === 'Card') {
+                    instruction.innerText = "কার্ডের তথ্য প্রদান করুন:";
+                    mfsFields.classList.add('hidden');
+                    cardFields.classList.remove('hidden');
+                } else {
+                    instruction.innerText = method + " নাম্বারে সেন্ড মানি করুন (01707059868):";
+                    mfsFields.classList.remove('hidden');
+                    cardFields.classList.add('hidden');
                 }
-            });
+            } else {
+                container.classList.add('hidden');
+            }
         }
 
         document.getElementById('orderForm').onsubmit = function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "প্রসেস হচ্ছে...";
+            btn.innerText = "অর্ডার প্রসেস হচ্ছে...";
             btn.disabled = true;
 
             const orderData = {
                 customerName: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value,
                 address: document.getElementById('custAddress').value,
+                addressType: document.querySelector('input[name="addrType"]:checked').value,
                 productName: document.getElementById('pName').innerText,
-                paymentMethod: document.querySelector('input[name="pay"]:checked').value
+                paymentMethod: document.querySelector('input[name="pay"]:checked').value,
+                totalAmount: document.getElementById('totalAmount').innerText
             };
 
-            // ১. ফায়ারবেসে ডাটা পাঠানো
-            db.collection("orders").add({
-                ...orderData,
-                createdAt: new Date()
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(orderData)
             }).then(() => {
-                // ২. গুগল শিটে ডাটা পাঠানো
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderData)
-                }).then(() => {
-                    document.getElementById('successOverlay').style.display = 'flex';
-                }).catch(() => {
-                    // শিটে এরর হলেও ফায়ারবেসে যেহেতু জমা হয়েছে, তাই সফল দেখাচ্ছি
-                    document.getElementById('successOverlay').style.display = 'flex';
-                });
-            }).catch(err => {
-                alert("এরর: " + err.message);
-                btn.innerText = "আবার চেষ্টা করুন";
+                alert("আপনার অর্ডার সফল হয়েছে! ধন্যবাদ।");
+                window.location.href = "index.html";
+            }).catch(() => {
+                alert("দুঃখিত, কোনো সমস্যা হয়েছে।");
+                btn.innerText = "অর্ডার নিশ্চিত করুন";
                 btn.disabled = false;
             });
         };
