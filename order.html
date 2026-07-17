@@ -16,7 +16,7 @@
     <div class="max-w-2xl mx-auto p-4">
         <!-- প্রোডাক্ট সামারি -->
         <div class="bg-white p-4 rounded-lg shadow-sm flex gap-4 mb-4">
-            <img id="productImg" src="https://placehold.co/100x100/eee/333?text=Loading..." class="w-20 h-20 object-cover rounded" alt="Product">
+            <img id="productImg" src="https://placehold.co/100x100/eee/333?text=Product" class="w-20 h-20 object-cover rounded" alt="Product">
             <div>
                 <h2 id="pName" class="text-sm font-medium text-gray-800 mb-1">লোড হচ্ছে...</h2>
                 <div class="text-lg font-bold custom-orange">৳ <span id="pPrice">0</span></div>
@@ -60,11 +60,7 @@
                         <span class="ml-2 text-sm font-semibold text-orange-600">নগদ (Nagad)</span>
                     </label>
                     
-                    <label class="flex items-center p-3 border rounded cursor-pointer hover:bg-blue-50">
-                        <input type="radio" name="pay" value="ডেবিট ও ক্রেডিট কার্ড" onchange="togglePaymentFields()">
-                        <span class="ml-2 text-sm font-semibold text-blue-600">ডেবিট ও ক্রেডিট কার্ড</span>
-                    </label>
-
+                    <!-- পেমেন্ট ডিটেইলস কন্টেইনার -->
                     <div id="paymentDetails" class="hidden p-4 bg-gray-50 rounded border-l-4 border-orange-daraz mt-2">
                         <p id="paymentInstruction" class="text-xs text-gray-700 mb-2 font-bold"></p>
                         <div id="mfsFields">
@@ -72,26 +68,7 @@
                             <input type="text" id="payNumber" placeholder="আপনার সেন্ড মানি করা নাম্বার" class="w-full p-2 border rounded mb-2 text-sm">
                             <input type="text" id="trxId" placeholder="ট্রানজেকশন আইডি (TrxID)" class="w-full p-2 border rounded text-sm">
                         </div>
-                        <div id="cardFields" class="hidden">
-                            <input type="text" placeholder="কার্ড নম্বর (১৬ ডিজিট)" class="w-full p-2 border rounded mb-2 text-sm">
-                            <div class="flex gap-2">
-                                <input type="text" placeholder="MM/YY" class="w-full p-2 border rounded mb-2 text-sm">
-                                <input type="text" placeholder="CVV" class="w-full p-2 border rounded mb-2 text-sm">
-                            </div>
-                        </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- অর্ডার সামারি -->
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-                <h3 class="text-md font-bold mb-3 border-b pb-2">অর্ডার সামারি</h3>
-                <div class="flex justify-between text-sm mb-1"><span>পণ্যের দাম</span> <span id="subTotal">৳ 0</span></div>
-                <div class="flex justify-between text-sm mb-1"><span>ডেলিভারি চার্জ</span> <span>৳ 45</span></div>
-                <div class="flex justify-between text-sm mb-1 text-green-600"><span>ফ্রি ডেলিভারি ছাড়</span> <span id="freeDelivery">-৳ 0</span></div>
-                <div class="flex justify-between text-sm mb-1"><span>অন্যান্য ফি</span> <span>৳ 20</span></div>
-                <div class="flex justify-between font-bold text-lg border-t pt-2 custom-orange">
-                    <span>মোট প্রদানযোগ্য</span> <span id="totalAmount">৳ 0</span>
                 </div>
             </div>
 
@@ -100,51 +77,28 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcKRpC9bSFSYFqTIQVeOJk3ePjt2w10UgZbAzd7WmRwWurUSQ28MuERRfbffrPwRTl/exec";
-        
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // ডাটা সেট করা
-        const pName = urlParams.get('name') || "প্রোডাক্টের নাম";
-        const pPrice = parseInt(urlParams.get('price')) || 0;
-        const pImg = urlParams.get('img') || "https://placehold.co/100x100/eee/333?text=No+Image";
-        const isFreeDelivery = urlParams.get('free') === 'true';
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // নাম, দাম ও ছবির লিংক রিসিভ করা
+            const pName = urlParams.get('name') || "প্রোডাক্ট";
+            const pPrice = urlParams.get('price') || "0";
+            const pImg = urlParams.get('img') || "https://placehold.co/100x100/eee/333?text=Product";
 
-        // এলিমেন্ট আপডেট করা
-        document.getElementById('pName').innerText = pName;
-        document.getElementById('pPrice').innerText = pPrice;
-        document.getElementById('productImg').src = pImg;
-        document.getElementById('subTotal').innerText = "৳ " + pPrice;
-        
-        let deliveryCharge = 45;
-        let freeDiscount = 0;
-        if(isFreeDelivery) {
-            freeDiscount = 45;
-            deliveryCharge = 0;
-            document.getElementById('freeDelivery').innerText = "-৳ 45";
-        }
-
-        const total = pPrice + deliveryCharge + 20;
-        document.getElementById('totalAmount').innerText = "৳ " + total;
+            // এইচটিএমএল এলিমেন্টে ডেটা বসানো
+            document.getElementById('pName').innerText = decodeURIComponent(pName);
+            document.getElementById('pPrice').innerText = pPrice;
+            document.getElementById('productImg').src = decodeURIComponent(pImg);
+        });
 
         function togglePaymentFields() {
             const method = document.querySelector('input[name="pay"]:checked').value;
             const container = document.getElementById('paymentDetails');
             const instruction = document.getElementById('paymentInstruction');
-            const mfsFields = document.getElementById('mfsFields');
-            const cardFields = document.getElementById('cardFields');
             
             if (method !== 'ক্যাশ অন ডেলিভারি') {
                 container.classList.remove('hidden');
-                if(method === 'ডেবিট ও ক্রেডিট কার্ড') {
-                    instruction.innerText = "কার্ডের তথ্য প্রদান করুন:";
-                    mfsFields.classList.add('hidden');
-                    cardFields.classList.remove('hidden');
-                } else {
-                    instruction.innerText = method + " নাম্বারে সেন্ড মানি করুন (01707059868):";
-                    mfsFields.classList.remove('hidden');
-                    cardFields.classList.add('hidden');
-                }
+                instruction.innerText = method + " নাম্বারে সেন্ড মানি করুন (01707059868):";
             } else {
                 container.classList.add('hidden');
             }
@@ -160,21 +114,19 @@
                 customerName: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value,
                 address: document.getElementById('custAddress').value,
-                addressType: document.querySelector('input[name="addrType"]:checked').value,
                 productName: document.getElementById('pName').innerText,
-                paymentMethod: document.querySelector('input[name="pay"]:checked').value,
-                totalAmount: document.getElementById('totalAmount').innerText
+                paymentMethod: document.querySelector('input[name="pay"]:checked').value
             };
 
-            fetch(SCRIPT_URL, {
+            fetch("https://script.google.com/macros/s/AKfycbwcKRpC9bSFSYFqTIQVeOJk3ePjt2w10UgZbAzd7WmRwWurUSQ28MuERRfbffrPwRTl/exec", {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(orderData)
             }).then(() => {
-                alert("আপনার অর্ডার সফল হয়েছে! ধন্যবাদ।");
+                alert("অর্ডার সফল হয়েছে!");
                 window.location.href = "index.html";
             }).catch(() => {
-                alert("দুঃখিত, কোনো সমস্যা হয়েছে।");
+                alert("দুঃখিত, আবার চেষ্টা করুন।");
                 btn.innerText = "অর্ডার নিশ্চিত করুন";
                 btn.disabled = false;
             });
