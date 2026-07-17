@@ -41,7 +41,7 @@
             <img id="orderProdImg" src="https://via.placeholder.com/65" alt="Product">
             <div class="product-det">
                 <h3 id="orderProdName">লোডিং...</h3>
-                <p idid="orderProdPrice">৳ 0</p>
+                <p id="orderProdPrice">৳ 0</p>
             </div>
         </div>
         <form class="form-body" id="orderSubmitForm">
@@ -52,23 +52,24 @@
             
             <div class="form-title">অর্ডার সামারি</div>
             <div class="summary-box">
-                <div class="sum-row"><span>Merchandise Subtotal:</span> <span id="sPrice">৳ 0</span></div>
-                <div class="sum-row"><span>Discount:</span> <span style="color:red;">-৳ 0</span></div>
-                <div class="sum-row"><span>Shipping Fee Total:</span> <span>৳ 45</span></div>
-                <div class="sum-row"><span>Other Fees:</span> <span>৳ 20</span></div>
-                <div class="sum-row"><span>Cash Payment Fee:</span> <span>৳ 20</span></div>
-                <div class="sum-row total-row"><span>Total:</span> <span id="sTotal">৳ 0</span></div>
+                <div class="sum-row"><span>পণ্য মূল্য:</span> <span id="sPrice">৳ 0</span></div>
+                <div class="sum-row"><span>ডেলিভারি চার্জ:</span> <span style="color:green; font-weight:bold;">ফ্রি</span></div>
+                <div class="sum-row"><span>অন্যান্য ফি (Other Fees):</span> <span>৳ 20</span></div>
+                <div class="sum-row total-row"><span>মোট প্রদানযোগ্য:</span> <span id="sTotal">৳ 0</span></div>
             </div>
 
             <div class="form-title">পেমেন্ট মেথড</div>
             <div class="payment-box">
                 <div class="payment-method" onclick="selectPayment('cod')"><input type="radio" name="payMethod" value="Cash On Delivery" checked> <strong>ক্যাশ অন ডেলিভারি</strong></div>
+                
                 <div class="payment-method" onclick="selectPayment('bkash')"><input type="radio" name="payMethod" value="Bkash"> <strong>বিকাশ</strong></div>
                 <div id="bkashDetails" class="account-details">বিকাশ নাম্বার: <strong>01707059868</strong></div>
+                
                 <div class="payment-method" onclick="selectPayment('nagad')"><input type="radio" name="payMethod" value="Nagad"> <strong>নগদ</strong></div>
                 <div id="nagadDetails" class="account-details">নগদ নাম্বার: <strong>01707059868</strong></div>
+                
                 <div class="payment-method" onclick="selectPayment('card')"><input type="radio" name="payMethod" value="Credit/Debit Card"> <strong>ক্রেডিট / ডেবিট কার্ড</strong></div>
-                <div id="cardDetails" class="account-details">ব্যাংক একাউন্ট: <strong>20501830200543210 (DBBL)</strong><br>পেমেন্ট করে ট্রানজেকশন আইডি দিন।</div>
+                <div id="cardDetails" class="account-details">ব্যাংক একাউন্ট নাম্বার: <strong>20501830200543210 (DBBL)</strong></div>
             </div>
             <div class="input-group" id="txIdGroup" style="display:none;"><label>পেমেন্ট নাম্বার ও ট্রানজেকশন আইডি *</label><input type="text" id="custTxID" placeholder="যেমন: 017xx..., TxID: ..."></div>
             <button type="submit" class="confirm-btn" id="submitBtn">অর্ডার নিশ্চিত করুন</button>
@@ -78,19 +79,21 @@
     <script>
         const firebaseConfig = { apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY", authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com", projectId: "daraz-bangladesh-6a0f8", storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app", messagingSenderId: "133315105065", appId: "1:133315105065:web:8b8fe1cd98fa61def3e738" };
         firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
         
+        let pName = "", pPrice = 0;
         const urlParams = new URLSearchParams(window.location.search);
-        // URL থেকে ডাটা নিয়ে সরাসরি ভেরিয়েবলে রাখছি
-        let pName = urlParams.get('name') || "অজানা পণ্য";
-        let pPrice = parseInt(urlParams.get('price')) || 0;
-        let pImg = urlParams.get('img');
+        const productId = urlParams.get('id');
 
-        // UI আপডেট করা হচ্ছে
-        document.getElementById('orderProdName').innerText = pName;
-        document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
-        document.getElementById('sPrice').innerText = "৳ " + pPrice;
-        
-        // টোটাল হিসাব: পণ্যমূল্য + শিপিং(৪৫) + আদার ফি(২০) + ক্যাশ পেমেন্ট ফি(২০) = ৮৫
+        if(productId) {
+            db.collection("products").doc(productId).get().then(doc => {
+                if(doc.exists) {
+                    const d = doc.data();
+                    pName = d.name; pPrice = parseInt(d.price);
+                    document.getElementById('orderProdName').innerText = pName;
+                    document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
+                    document.getElementById('sPrice').innerText = "৳ " + pPrice;
+                    // টোটাল হিসাব: পণ্যমূল্য + শিপিং(৪৫) + আদার ফি(২০) + ক্যাশ পেমেন্ট ফি(২০) = ৮৫
         const total = pPrice + 85;
         document.getElementById('sTotal').innerText = "৳ " + total;
         if(pImg) document.getElementById('orderProdImg').src = decodeURIComponent(pImg);
@@ -138,4 +141,4 @@
         });
     </script>
 </body>
-</html>
+                </html>
