@@ -68,8 +68,7 @@
                 <div id="dbblDetails" class="account-details">DBBL অ্যাকাউন্ট: <strong>3421580157514</strong></div>
             </div>
             <div class="input-group" id="txIdGroup" style="display:none;"><label>ট্রানজেকশন আইডি (TxID) দিন *</label><input type="text" id="custTxID" placeholder="TxID লিখুন"></div>
-            <button type="submit" class="confirm-btn">অর্ডার নিশ্চিত করুন</button>
-        </form>
+            <button type="submit" class="confirm-btn" id="submitBtn">অর্ডার নিশ্চিত করুন</button>
     </div>
     <script>
         const firebaseConfig = { apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY", authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com", projectId: "daraz-bangladesh-6a0f8", storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app", messagingSenderId: "133315105065", appId: "1:133315105065:web:8b8fe1cd98fa61def3e738" };
@@ -101,15 +100,16 @@
                 document.getElementById('custTxID').required = false;
             }
         }
-        /* STREAMING_CHUNK: সহজ এবং নিশ্চিত অর্ডার সাবমিট লজিক */
-document.getElementById('orderSubmitForm').onsubmit = function(e) {
+/* STREAMING_CHUNK: নিশ্চিত অর্ডার সাবমিট লজিক */
+document.getElementById('orderSubmitForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const btn = document.getElementById('submitBtn');
-    btn.innerText = "অর্ডার সাবমিট হচ্ছে...";
+    // বাটন খুঁজে বের করা
+    const btn = document.querySelector('.confirm-btn');
+    btn.innerHTML = "অর্ডার সাবমিট হচ্ছে...";
     btn.disabled = true;
 
-    // ১. Firebase-এ ডেটা সেভ করা
+    // Firebase-এ ডেটা পাঠানো
     db.collection("orders").add({
         Product_Name: document.getElementById('orderProdName').innerText,
         Price: document.getElementById('orderProdPrice').innerText,
@@ -119,6 +119,17 @@ document.getElementById('orderSubmitForm').onsubmit = function(e) {
         Payment_Method: document.querySelector('input[name="payMethod"]:checked').value,
         Transaction_Info: document.getElementById('custTxID').value || "N/A",
         Date: new Date().toLocaleString("bn-BD")
+    })
+    .then(function() {
+        alert("🎉 অভিনন্দন! আপনার অর্ডারটি সফলভাবে গৃহীত হয়েছে।");
+        window.location.href = "index.html";
+    })
+    .catch(function(error) {
+        alert("দুঃখিত, সমস্যা হয়েছে: " + error.message);
+        btn.innerHTML = "অর্ডার নিশ্চিত করুন";
+        btn.disabled = false;
+    });
+});
     })
     .then(function() {
         alert("🎉 অভিনন্দন! আপনার অর্ডারটি সফলভাবে গৃহীত হয়েছে।");
