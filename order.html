@@ -102,7 +102,7 @@
             }
         }
         /* STREAMING_CHUNK: সহজ এবং নিশ্চিত অর্ডার সাবমিট লজিক */
-document.getElementById('orderSubmitForm').addEventListener('submit', function(e) {
+document.getElementById('orderSubmitForm').onsubmit = function(e) {
     e.preventDefault();
     
     const btn = document.getElementById('submitBtn');
@@ -120,13 +120,16 @@ document.getElementById('orderSubmitForm').addEventListener('submit', function(e
         Transaction_Info: document.getElementById('custTxID').value || "N/A",
         Date: new Date().toLocaleString("bn-BD")
     })
-    .then(() => {
-        // Firebase সফল হলে, Google Sheet-এর লিংকটি শুধুমাত্র নতুন একটি ট্যাবে ওপেন করবে (এটি পেজ আটকে রাখবে না)
-        const scriptURL = 'https://script.google.com/macros/s/AKfycby7g8sK5zP_y7x0aTfC6lGqH3u0P8vjX2vjKk3O/exec';
-        const params = `?Product_Name=${document.getElementById('orderProdName').innerText}&Customer_Name=${document.getElementById('custName').value}`;
-        
-        // ব্যাকগ্রাউন্ডে গুগল সিটে পাঠানোর চেষ্টা করবে
-        fetch(scriptURL + params, { mode: 'no-cors' });
+    .then(function() {
+        alert("🎉 অভিনন্দন! আপনার অর্ডারটি সফলভাবে গৃহীত হয়েছে।");
+        window.location.href = "index.html";
+    })
+    .catch(function(error) {
+        alert("দুঃখিত, কোনো সমস্যা হয়েছে: " + error.message);
+        btn.innerText = "অর্ডার নিশ্চিত করুন";
+        btn.disabled = false;
+    });
+};
 
         alert("🎉 অভিনন্দন! আপনার অর্ডারটি সফলভাবে গৃহীত হয়েছে।");
         window.location.href = "index.html";
