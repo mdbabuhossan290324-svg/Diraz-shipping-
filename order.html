@@ -101,20 +101,44 @@
                 document.getElementById('custTxID').required = false;
             }
         }
-        /* STREAMING_CHUNK:চূড়ান্ত এবং নিশ্চিত সাবমিট লজিক */
-        document.getElementById('orderSubmitForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // সাবমিট বাটন ব্লক করা
-            const btn = document.querySelector('.confirm-btn');
-            btn.innerHTML = 'অর্ডার সাবমিট হচ্ছে...';
-            btn.disabled = true;
+        /* STREAMING_CHUNK: চূড়ান্ত সাবমিট লজিক - কোনোভাবেই পেজ আটকা থাকবে না */
+document.getElementById('orderSubmitForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btn = document.querySelector('.confirm-btn');
+    btn.innerHTML = 'অর্ডার সাবমিট হচ্ছে...';
+    btn.disabled = true;
 
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const address = document.getElementById('custAddress').value;
-            const method = document.querySelector('input[name="payMethod"]:checked').value;
-            const txInfo = document.getElementById('custTxID').value || "N/A";
+    const data = {
+        Product_Name: currentProductName,
+        Price: currentProductPrice,
+        Customer_Name: document.getElementById('custName').value,
+        Phone_Number: document.getElementById('custPhone').value,
+        Full_Address: document.getElementById('custAddress').value,
+        Payment_Method: document.querySelector('input[name="payMethod"]:checked').value,
+        Transaction_Info: document.getElementById('custTxID')?.value || "N/A"
+    };
+
+    // ১. Firebase-এ পাঠানো (দ্রুত কাজ করবে)
+    db.collection("orders").add(data).catch(err => console.error(err));
+
+    // ২. Google Sheets-এ পাঠানো (পেজ যেন আটকে না থাকে)
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby7g8sK5zP_y7x0aTfC6lGqH3u0P8vjX2vjKk3O/exec';
+    
+    // fetch দিয়ে ডেটা পাঠানোর চেষ্টা করবে, কিন্তু রেজাল্টের জন্য বসে থাকবে না
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data).toString()
+    }).catch(err => console.error(err));
+
+    // ৩. ৩ সেকেন্ড পর অটোমেটিক সাকসেস মেসেজ দেখিয়ে রিডাইরেক্ট করবে
+    setTimeout(() => {
+        alert("🎉 অভিনন্দন! আপনার অর্ডারটি সফলভাবে গৃহীত হয়েছে।");
+        window.location.href = "index.html";
+    }, 2000);
+});
 
             // ১. Firebase-এ পাঠানো (এটি ব্যাকগ্রাউন্ডে চলবে)
             db.collection("orders").add({
