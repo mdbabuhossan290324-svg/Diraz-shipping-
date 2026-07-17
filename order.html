@@ -93,9 +93,8 @@
                     document.getElementById('orderProdName').innerText = pName;
                     document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
                     document.getElementById('sPrice').innerText = "৳ " + pPrice;
-                    // টোটাল হিসাব: পণ্যমূল্য + শিপিং(৪৫) + আদার ফি(২০) + ক্যাশ পেমেন্ট ফি(২০) = ৮৫
-        const total = pPrice + 85;
-        document.getElementById('sTotal').innerText = "৳ " + total;
+                    // ডেলিভারি চার্জ সেভ 40 + 45 + 20 +20 টাকা অন্যান্য ফি
+                    document.getElementById('sTotal').innerText = "৳ " + (pPrice + 20);
                     if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
                 }
             });
