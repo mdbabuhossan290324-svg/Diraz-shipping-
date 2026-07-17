@@ -96,7 +96,10 @@
                     // টোটাল হিসাব: পণ্যমূল্য + শিপিং(৪৫) + আদার ফি(২০) + ক্যাশ পেমেন্ট ফি(২০) = ৮৫
         const total = pPrice + 85;
         document.getElementById('sTotal').innerText = "৳ " + total;
-        if(pImg) document.getElementById('orderProdImg').src = decodeURIComponent(pImg);
+                    if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
+                }
+            });
+        }
 
         window.selectPayment = function(m) {
             document.querySelectorAll('input[name="payMethod"]').forEach(r => { if(r.value === (m === 'cod' ? 'Cash On Delivery' : (m === 'bkash' ? 'Bkash' : (m === 'nagad' ? 'Nagad' : 'Credit/Debit Card')))) r.checked = true; else r.checked = false; });
@@ -141,4 +144,4 @@
         });
     </script>
 </body>
-                </html>
+    </html>
