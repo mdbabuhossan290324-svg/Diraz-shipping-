@@ -93,13 +93,7 @@
                     document.getElementById('orderProdName').innerText = pName;
                     document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
                     document.getElementById('sPrice').innerText = "৳ " + pPrice;
-                    // ডেলিভারি ফ্রি + 20 টাকা অন্যান্য মোট ফি
-                    <div class="summary-box">
-    <div class="sum-row"><span>পণ্য মূল্য:</span> <span id="sPrice">৳ 0</span></div>
-    <div class="sum-row"><span>শিপিং ফি:</span> <span>৳ 45</span></div>
-    <div class="sum-row" id="cashFeeRow"><span>ক্যাশ পেমেন্ট ফি:</span> <span>৳ 20</span></div>
-    <div class="sum-row total-row"><span>মোট প্রদানযোগ্য:</span> <span id="sTotal">৳ 0</span></div>
-</div>
+                    // ডেলিভারি ফ্রি + ২০ টাকা অন্যান্য ফি
                     document.getElementById('sTotal').innerText = "৳ " + (pPrice + 20);
                     if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
                 }
@@ -149,4 +143,4 @@
         });
     </script>
 </body>
-    </html>
+                                                                             </html>
