@@ -41,7 +41,7 @@
             <img id="orderProdImg" src="https://via.placeholder.com/65" alt="Product">
             <div class="product-det">
                 <h3 id="orderProdName">লোডিং...</h3>
-                <p idid="orderProdPrice">৳ 0</p>
+                <p id="orderProdPrice">৳ 0</p>
             </div>
         </div>
         <form class="form-body" id="orderSubmitForm">
@@ -53,20 +53,23 @@
             <div class="form-title">অর্ডার সামারি</div>
             <div class="summary-box">
                 <div class="sum-row"><span>পণ্য মূল্য:</span> <span id="sPrice">৳ 0</span></div>
-                <div class="sum-row"><span>ডেলিভারি চার্জ:</span> <span id="sDelivery">৳ 0</span></div>
-                <div class="sum-row"><span>অন্যান্য ফি:</span> <span>৳ 20</span></div>
+                <div class="sum-row"><span>ডেলিভারি চার্জ:</span> <span style="color:green; font-weight:bold;">ফ্রি</span></div>
+                <div class="sum-row"><span>অন্যান্য ফি (Other Fees):</span> <span>৳ 20</span></div>
                 <div class="sum-row total-row"><span>মোট প্রদানযোগ্য:</span> <span id="sTotal">৳ 0</span></div>
             </div>
 
             <div class="form-title">পেমেন্ট মেথড</div>
             <div class="payment-box">
                 <div class="payment-method" onclick="selectPayment('cod')"><input type="radio" name="payMethod" value="Cash On Delivery" checked> <strong>ক্যাশ অন ডেলিভারি</strong></div>
+                
                 <div class="payment-method" onclick="selectPayment('bkash')"><input type="radio" name="payMethod" value="Bkash"> <strong>বিকাশ</strong></div>
                 <div id="bkashDetails" class="account-details">বিকাশ নাম্বার: <strong>01707059868</strong></div>
+                
                 <div class="payment-method" onclick="selectPayment('nagad')"><input type="radio" name="payMethod" value="Nagad"> <strong>নগদ</strong></div>
                 <div id="nagadDetails" class="account-details">নগদ নাম্বার: <strong>01707059868</strong></div>
+                
                 <div class="payment-method" onclick="selectPayment('card')"><input type="radio" name="payMethod" value="Credit/Debit Card"> <strong>ক্রেডিট / ডেবিট কার্ড</strong></div>
-                <div id="cardDetails" class="account-details">ব্যাংক একাউন্ট: <strong>20501830200543210 (DBBL)</strong><br>পেমেন্ট করে ট্রানজেকশন আইডি দিন।</div>
+                <div id="cardDetails" class="account-details">ব্যাংক একাউন্ট নাম্বার: <strong>20501830200543210 (DBBL)</strong></div>
             </div>
             <div class="input-group" id="txIdGroup" style="display:none;"><label>পেমেন্ট নাম্বার ও ট্রানজেকশন আইডি *</label><input type="text" id="custTxID" placeholder="যেমন: 017xx..., TxID: ..."></div>
             <button type="submit" class="confirm-btn" id="submitBtn">অর্ডার নিশ্চিত করুন</button>
@@ -87,16 +90,11 @@
                 if(doc.exists) {
                     const d = doc.data();
                     pName = d.name; pPrice = parseInt(d.price);
-                    // ডেলিভারি চার্জ চেক: যদি ডাটাবেসে deliveryCharge থাকে তবে সেটি ব্যবহার হবে, না থাকলে ফ্রি।
-                    const dCharge = parseInt(d.deliveryCharge) || 0; 
-                    
                     document.getElementById('orderProdName').innerText = pName;
                     document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
                     document.getElementById('sPrice').innerText = "৳ " + pPrice;
-                    
-                    document.getElementById('sDelivery').innerText = dCharge === 0 ? "ফ্রি" : "৳ " + dCharge;
-                    document.getElementById('sTotal').innerText = "৳ " + (pPrice + dCharge + 20);
-                    
+                    // ডেলিভারি ফ্রি + ২০ টাকা অন্যান্য ফি
+                    document.getElementById('sTotal').innerText = "৳ " + (pPrice + 20);
                     if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
                 }
             });
