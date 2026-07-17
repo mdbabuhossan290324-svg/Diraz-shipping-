@@ -77,27 +77,26 @@
     </div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY", authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com", projectId: "daraz-bangladesh-6a0f8", storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app", messagingSenderId: "133315105065", appId: "1:133315105065:web:8b8fe1cd98fa61def3e738" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        
-        let pName = "", pPrice = 0;
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
+        // ডেলিভারি (৪৫) + ক্যাশ পেমেন্ট ফি (২০) = মোট ৬৫ টাকা বাড়তি
+const shippingFee = 45;
+const cashFee = 20;
 
-        if(productId) {
-            db.collection("products").doc(productId).get().then(doc => {
-                if(doc.exists) {
-                    const d = doc.data();
-                    pName = d.name; pPrice = parseInt(d.price);
-                    document.getElementById('orderProdName').innerText = pName;
-                    document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
-                    document.getElementById('sPrice').innerText = "৳ " + pPrice;
-                    // ডেলিভারি চার্জ  + ২০ টাকা অন্যান্য ফি
-                    document.getElementById('sTotal').innerText = "৳ " + (pPrice + 20);
-                    if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
-                }
-            });
+if(productId) {
+    db.collection("products").doc(productId).get().then(doc => {
+        if(doc.exists) {
+            const d = doc.data();
+            pName = d.name; pPrice = parseInt(d.price);
+            document.getElementById('orderProdName').innerText = pName;
+            document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
+            document.getElementById('sPrice').innerText = "৳ " + pPrice;
+            
+            // হিসাব: পণ্য মূল্য + শিপিং (৪৫) + ক্যাশ ফি (২০)
+            const total = pPrice + shippingFee + cashFee;
+            document.getElementById('sTotal').innerText = "৳ " + total;
+            
+            if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
+        }
+    });
         }
 
         window.selectPayment = function(m) {
