@@ -78,26 +78,22 @@
     <script>
         const firebaseConfig = { apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY", authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com", projectId: "daraz-bangladesh-6a0f8", storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app", messagingSenderId: "133315105065", appId: "1:133315105065:web:8b8fe1cd98fa61def3e738" };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
         
-        let pName = "", pPrice = 0;
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
+        // URL থেকে ডাটা নিয়ে সরাসরি ভেরিয়েবলে রাখছি
+        let pName = urlParams.get('name') || "অজানা পণ্য";
+        let pPrice = parseInt(urlParams.get('price')) || 0;
+        let pImg = urlParams.get('img');
 
-        if(productId) {
-            db.collection("products").doc(productId).get().then(doc => {
-                if(doc.exists) {
-                    const d = doc.data();
-                    pName = d.name; pPrice = parseInt(d.price);
-                    document.getElementById('orderProdName').innerText = pName;
-                    document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
-                    document.getElementById('sPrice').innerText = "৳ " + pPrice;
-                    // টোটাল হিসাব: পণ্যমূল্য + শিপিং(৪৫) + আদার ফি(২০) + ক্যাশ পেমেন্ট ফি(২০) = ৮৫
-                    document.getElementById('sTotal').innerText = "৳ " + (pPrice + 85);
-                    if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
-                }
-            });
-        }
+        // UI আপডেট করা হচ্ছে
+        document.getElementById('orderProdName').innerText = pName;
+        document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
+        document.getElementById('sPrice').innerText = "৳ " + pPrice;
+        
+        // টোটাল হিসাব: পণ্যমূল্য + শিপিং(৪৫) + আদার ফি(২০) + ক্যাশ পেমেন্ট ফি(২০) = ৮৫
+        const total = pPrice + 85;
+        document.getElementById('sTotal').innerText = "৳ " + total;
+        if(pImg) document.getElementById('orderProdImg').src = decodeURIComponent(pImg);
 
         window.selectPayment = function(m) {
             document.querySelectorAll('input[name="payMethod"]').forEach(r => { if(r.value === (m === 'cod' ? 'Cash On Delivery' : (m === 'bkash' ? 'Bkash' : (m === 'nagad' ? 'Nagad' : 'Credit/Debit Card')))) r.checked = true; else r.checked = false; });
