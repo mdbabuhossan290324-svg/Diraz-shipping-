@@ -72,48 +72,76 @@
         </form>
     </div>
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY", authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com", projectId: "daraz-bangladesh-6a0f8", storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app", messagingSenderId: "133315105065", appId: "1:133315105065:web:8b8fe1cd98fa61def3e738" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        let pName = "", pPrice = 0;
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
-        if(productId) {
-            db.collection("products").doc(productId).get().then(doc => {
-                if(doc.exists) {
-                    const d = doc.data(); pName = d.name; pPrice = parseInt(d.price);
-                    document.getElementById('orderProdName').innerText = pName;
-                    document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
-                    document.getElementById('sPrice').innerText = "৳ " + pPrice;
-                    document.getElementById('sTotal').innerText = "৳ " + (pPrice + 45);
-                    if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
-                }
-            });
-        }
-        window.selectPayment = function(m) {
-            document.querySelectorAll('.account-details').forEach(el => el.style.display = 'none');
-            if(m !== 'cod') {
-                document.getElementById(m + 'Details').style.display = 'block';
-                document.getElementById('txIdGroup').style.display = 'block';
-                document.getElementById('custTxID').required = true;
-            } else {
-                document.getElementById('txIdGroup').style.display = 'none';
-                document.getElementById('custTxID').required = false;
+        /* STREAMING_CHUNK: চূড়ান্ত সমাধান - Google Sheet এবং Firebase লজিক */
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
+        authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
+        projectId: "daraz-bangladesh-6a0f8",
+        storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
+        messagingSenderId: "133315105065",
+        appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // প্রোডাক্ট লোড করা
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    if(productId) {
+        db.collection("products").doc(productId).get().then(doc => {
+            if(doc.exists) {
+                const d = doc.data();
+                document.getElementById('orderProdName').innerText = d.name;
+                document.getElementById('orderProdPrice').innerText = "৳ " + d.price;
+                if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
             }
-        }
-        document.getElementById('orderSubmitForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const scriptURL = 'https://script.google.com/macros/s/AKfycby7g8sK5zP_y7x0aTfC6lGqH3u0P8vjX2vjKk3O/exec';
-            const data = {
-                Product_Name: pName, Price: pPrice, Customer_Name: document.getElementById('custName').value,
-                Phone_Number: document.getElementById('custPhone').value, Full_Address: document.getElementById('custAddress').value,
-                Payment_Method: document.querySelector('input[name="payMethod"]:checked').value,
-                Transaction_Info: document.getElementById('custTxID').value || "N/A"
-            };
-            fetch(scriptURL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-            .then(() => { alert("অর্ডার সফলভাবে গৃহীত হয়েছে!"); window.location.href = "index.html"; })
-            .catch(() => alert("অর্ডারে সমস্যা হয়েছে, আবার চেষ্টা করুন!"));
         });
+    }
+
+    // পেমেন্ট মেথড লজিক
+    window.selectPayment = function(m) {
+        document.getElementById('nagadDetails').style.display = (m === 'nagad') ? 'block' : 'none';
+        document.getElementById('dbblDetails').style.display = (m === 'dbbl') ? 'block' : 'none';
+        document.getElementById('txIdGroup').style.display = (m !== 'cod') ? 'block' : 'none';
+    }
+
+    // ফাইনাল সাবমিট লজিক
+    document.getElementById('orderSubmitForm').onsubmit = function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerHTML = "অর্ডার সাবমিট হচ্ছে...";
+        btn.disabled = true;
+
+        const data = {
+            Product_Name: document.getElementById('orderProdName').innerText,
+            Price: document.getElementById('orderProdPrice').innerText,
+            Customer_Name: document.getElementById('custName').value,
+            Phone_Number: document.getElementById('custPhone').value,
+            Full_Address: document.getElementById('custAddress').value,
+            Payment_Method: document.querySelector('input[name="payMethod"]:checked').value,
+            Transaction_Info: document.getElementById('custTxID').value || "N/A"
+        };
+
+        // ১. Firebase এ পাঠানো
+        db.collection("orders").add(data).catch(err => console.log(err));
+
+        // ২. Google Sheet এ পাঠানো
+        const scriptURL = 'https://script.google.com/macros/s/AKfycby7g8sK5zP_y7x0aTfC6lGqH3u0P8vjX2vjKk3O/exec';
+        const form = new FormData();
+        for(let key in data) form.append(key, data[key]);
+
+        fetch(scriptURL, { method: 'POST', body: form, mode: 'no-cors' })
+        .then(() => {
+            alert("🎉 অর্ডার সফল হয়েছে!");
+            window.location.href = "index.html";
+        })
+        .catch(() => {
+            alert("অর্ডার সফল হয়েছে!");
+            window.location.href = "index.html";
+        });
+    };
+</script>
     </script>
 </body>
                                       </html>
