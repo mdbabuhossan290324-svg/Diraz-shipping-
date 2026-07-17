@@ -93,7 +93,7 @@
                     document.getElementById('orderProdName').innerText = pName;
                     document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
                     document.getElementById('sPrice').innerText = "৳ " + pPrice;
-                    // ডেলিভারি চার্জ সেভ 40 + 45 + 20 +20 টাকা অন্যান্য ফি
+                    // ডেলিভারি চার্জ  + ২০ টাকা অন্যান্য ফি
                     document.getElementById('sTotal').innerText = "৳ " + (pPrice + 20);
                     if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
                 }
@@ -143,4 +143,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
