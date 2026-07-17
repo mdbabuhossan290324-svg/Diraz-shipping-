@@ -24,7 +24,6 @@
         label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 4px; }
         input[type="text"], input[type="number"], textarea { width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; outline: none; }
         
-        /* Summary Box */
         .summary-box { background: #fdfdfd; border: 1px solid #eee; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .total-row { font-weight: bold; font-size: 15px; color: var(--daraz-orange); border-top: 1px solid #ddd; padding-top: 5px; margin-top: 5px; }
@@ -61,12 +60,17 @@
             <div class="form-title">পেমেন্ট মেথড</div>
             <div class="payment-box">
                 <div class="payment-method" onclick="selectPayment('cod')"><input type="radio" name="payMethod" value="Cash On Delivery" checked> <strong>ক্যাশ অন ডেলিভারি</strong></div>
-                <div class="payment-method" onclick="selectPayment('nagad')"><input type="radio" name="payMethod" value="Nagad"> <strong>নগদ সেন্ড মানি</strong></div>
+                
+                <div class="payment-method" onclick="selectPayment('bkash')"><input type="radio" name="payMethod" value="Bkash"> <strong>বিকাশ</strong></div>
+                <div id="bkashDetails" class="account-details">বিকাশ নাম্বার: <strong>01707059868</strong></div>
+                
+                <div class="payment-method" onclick="selectPayment('nagad')"><input type="radio" name="payMethod" value="Nagad"> <strong>নগদ</strong></div>
                 <div id="nagadDetails" class="account-details">নগদ নাম্বার: <strong>01707059868</strong></div>
-                <div class="payment-method" onclick="selectPayment('dbbl')"><input type="radio" name="payMethod" value="DBBL"> <strong>ডাচ-বাংলা ব্যাংক</strong></div>
-                <div id="dbblDetails" class="account-details">DBBL অ্যাকাউন্ট: <strong>3421580157514</strong></div>
+                
+                <div class="payment-method" onclick="selectPayment('card')"><input type="radio" name="payMethod" value="Credit/Debit Card"> <strong>ক্রেডিট / ডেবিট কার্ড</strong></div>
+                <div id="cardDetails" class="account-details">কার্ডে পেমেন্ট নিশ্চিত করতে আপনার ট্রানজেকশন আইডি প্রদান করুন।</div>
             </div>
-            <div class="input-group" id="txIdGroup" style="display:none;"><label>নাম্বার ও ট্রানজেকশন আইডি দিন *</label><input type="text" id="custTxID" placeholder="যেমন: 017xx..., TxID: ..."></div>
+            <div class="input-group" id="txIdGroup" style="display:none;"><label>পেমেন্ট নাম্বার ও ট্রানজেকশন আইডি *</label><input type="text" id="custTxID" placeholder="যেমন: 017xx..., TxID: ..."></div>
             <button type="submit" class="confirm-btn" id="submitBtn">অর্ডার নিশ্চিত করুন</button>
         </form>
     </div>
@@ -95,10 +99,10 @@
         }
 
         window.selectPayment = function(m) {
-            document.querySelectorAll('input[name="payMethod"]').forEach(r => r.checked = false);
-            document.querySelector(`input[value="${m === 'cod' ? 'Cash On Delivery' : (m === 'nagad' ? 'Nagad' : 'DBBL')}"]`).checked = true;
+            document.querySelectorAll('input[name="payMethod"]').forEach(r => { if(r.value === (m === 'cod' ? 'Cash On Delivery' : (m === 'bkash' ? 'Bkash' : (m === 'nagad' ? 'Nagad' : 'Credit/Debit Card')))) r.checked = true; else r.checked = false; });
+            document.getElementById('bkashDetails').style.display = (m === 'bkash') ? 'block' : 'none';
             document.getElementById('nagadDetails').style.display = (m === 'nagad') ? 'block' : 'none';
-            document.getElementById('dbblDetails').style.display = (m === 'dbbl') ? 'block' : 'none';
+            document.getElementById('cardDetails').style.display = (m === 'card') ? 'block' : 'none';
             document.getElementById('txIdGroup').style.display = (m !== 'cod') ? 'block' : 'none';
         }
 
@@ -108,27 +112,25 @@
             btn.innerText = "অর্ডার সাবমিট হচ্ছে...";
             btn.disabled = true;
 
-            // আপনার নতুন Apps Script URL এখানে বসানো হয়েছে
             const scriptURL = 'https://script.google.com/macros/s/AKfycbwwSG98-8oyRafmiSXpDrEOXSlnQHfDIzMQCM42CimBGhTgKj3JzwPioJdWB7QnYi9i/exec';
             
-            // Apps Script এর সাথে মিল রেখে নামগুলো দেওয়া হলো
             const data = {
                 productName: pName, 
                 customerName: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value, 
                 address: document.getElementById('custAddress').value,
-                paymentMethod: document.querySelector('input[name="payMethod"]:checked').value
+                paymentMethod: document.querySelector('input[name="payMethod"]:checked').value,
+                txID: document.getElementById('custTxID').value || 'N/A'
             };
 
             fetch(scriptURL, { 
                 method: 'POST', 
                 mode: 'no-cors', 
-                // Apps script এ JSON পাঠানোর জন্য text/plain ব্যবহার করা ভালো
                 headers: { 'Content-Type': 'text/plain' }, 
                 body: JSON.stringify(data) 
             })
             .then(() => { 
-                alert("অর্ডার সফলভাবে গৃহীত হয়েছে এবং Google Sheet এ জমা হয়েছে!"); 
+                alert("অর্ডার সফলভাবে গৃহীত হয়েছে!"); 
                 window.location.href = "index.html"; 
             })
             .catch(() => { 
@@ -139,4 +141,4 @@
         });
     </script>
 </body>
-                    </html>
+                </html>
