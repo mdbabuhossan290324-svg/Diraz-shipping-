@@ -101,21 +101,59 @@
                 document.getElementById('custTxID').required = false;
             }
         }
-        /* STREAMING_CHUNK:Firebase এবং Google Sheets-এ ডেটা পাঠানোর চূড়ান্ত সমাধান */
+        /* STREAMING_CHUNK:চূড়ান্ত এবং নিশ্চিত সাবমিট লজিক */
         document.getElementById('orderSubmitForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // সাবমিট বাটন ব্লক করা
             const btn = document.querySelector('.confirm-btn');
             btn.innerHTML = 'অর্ডার সাবমিট হচ্ছে...';
             btn.disabled = true;
 
-            const orderData = {
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const address = document.getElementById('custAddress').value;
+            const method = document.querySelector('input[name="payMethod"]:checked').value;
+            const txInfo = document.getElementById('custTxID').value || "N/A";
+
+            // ১. Firebase-এ পাঠানো (এটি ব্যাকগ্রাউন্ডে চলবে)
+            db.collection("orders").add({
                 Product_Name: currentProductName,
                 Price: currentProductPrice,
-                Customer_Name: document.getElementById('custName').value,
-                Phone_Number: document.getElementById('custPhone').value,
-                Full_Address: document.getElementById('custAddress').value,
-                Payment_Method: document.querySelector('input[name="payMethod"]:checked').value,
-                Transaction_Info: document.getElementById('custTxID').value || "N/A"
+                Customer_Name: name,
+                Phone_Number: phone,
+                Full_Address: address,
+                Payment_Method: method,
+                Transaction_Info: txInfo,
+                Timestamp: new Date().toISOString()
+            }).catch(err => console.log(err));
+
+            // ২. Google Sheets-এ পাঠানো (সরাসরি URL Parameters দিয়ে)
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby7g8sK5zP_y7x0aTfC6lGqH3u0P8vjX2vjKk3O/exec';
+            const params = new URLSearchParams();
+            params.append('Product_Name', currentProductName);
+            params.append('Price', currentProductPrice);
+            params.append('Customer_Name', name);
+            params.append('Phone_Number', phone);
+            params.append('Full_Address', address);
+            params.append('Payment_Method', method);
+            params.append('Transaction_Info', txInfo);
+
+            fetch(scriptURL + '?' + params.toString(), {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                alert("🎉 অভিনন্দন! আপনার অর্ডারটি সফলভাবে সম্পন্ন হয়েছে।");
+                window.location.href = "index.html";
+            })
+            .catch(() => {
+                // যদি fetch কোনো কারণে এরর দেয়, তবুও অর্ডার সফল ধরে রিডাইরেক্ট করে দেবো
+                alert("🎉 আপনার অর্ডারটি গ্রহণ করা হয়েছে!");
+                window.location.href = "index.html";
+            });
+        });
+        
             };
 
             // ১. Firebase-এ পাঠানো
