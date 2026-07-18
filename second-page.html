@@ -1,0 +1,31 @@
+<!-- নিচের এই অংশটি আপনার প্রোডাক্ট গ্রিডের ভেতরে আপডেট হবে -->
+<script>
+    function displayProducts(products) {
+        const container = document.getElementById('productContainer');
+        container.innerHTML = "";
+        
+        products.forEach((product) => {
+            // আপনার দেওয়া রিকোয়েস্ট অনুযায়ী রেটিং স্ট্রিং
+            const ratingMarkup = `<div style="font-size: 10px; color: #ff9900; margin: 2px 0;">⭐ 8.5 (667) 23k sold</div>`;
+            
+            container.innerHTML += `
+                <div class="product-card">
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" class="product-img" alt="">
+                    <div class="product-info">
+                        <div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="price-row">
+                                <span class="current-price">৳ ${product.price}</span>
+                            </div>
+                            ${ratingMarkup}
+                        </div>
+                        <!-- এখানে অর্ডার লিংকের বদলে সরাসরি এফিলিয়েট লিংক বসবে -->
+                        <a href="${product.affiliateLink || '#'}" target="_blank" class="order-btn" style="background:#00b74a;">
+                            <i class="fa-solid fa-cart-shopping"></i> Buy Now
+                        </a>
+                    </div>
+                </div>
+            `;
+        });
+    }
+</script>
