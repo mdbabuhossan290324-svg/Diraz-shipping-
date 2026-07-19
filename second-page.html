@@ -1,31 +1,138 @@
-<!-- নিচের এই অংশটি আপনার প্রোডাক্ট গ্রিডের ভেতরে আপডেট হবে -->
-<script>
-    function displayProducts(products) {
-        const container = document.getElementById('productContainer');
-        container.innerHTML = "";
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আশ্চর্য জনক ডিল</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <style>
+        .ticker-wrap{width:100%;overflow:hidden;background:#f85606;color:#fff;padding:10px 0;white-space:nowrap;font-size:13px;font-weight:600;}
+        .ticker{display:inline-block;padding-left:100%;animation:marquee 22s linear infinite;}
+        @keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-100%);}}
+    </style>
+</head>
+<body class="bg-gray-100 pb-20">
+
+    <!-- Header -->
+    <div class="text-center p-4 bg-white shadow">
+        <h1 class="text-2xl font-bold text-orange-600">আশ্চর্য জনক ডিল</h1>
+    </div>
+
+    <!-- Top Banner (Direct Link) -->
+    <div class="p-4 text-center">
+        <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjsDufZATECydVeIBu1ciprHcfIYUtTa03cEPSSGnrrTwfH1WcQSfqFLamQ2vgjfy_LKzxNqjFOkUGUDxX4Tfyt9CsCHSLsxOj7b53P7t40ad3BbGoSr1tB4jwxmLNHaubuRxeoA6VHjlhHTFvgVuP4Oo34_zQvK-h3ZpUTjNtRC1InulntoF7Qhj1f_4M/s320/ChatGPT%20Image%20Jul%2018,%202026,%2012_54_59%20AM.png" class="mx-auto rounded-lg shadow-lg">
+        </a>
+    </div>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap"><div class="ticker">🎉 আশ্চর্য জনক ডিলে আপনাকে স্বাগতম | ১০% থেকে ৭০% পর্যন্ত ডিসকাউন্ট | ক্যাশ অন ডেলিভারি | অফার চলছে!</div></div>
+
+    <!-- Banner Ad 1 -->
+    <div class="p-2 text-center my-4">
+        <script>atOptions = {'key' : '0954ebc33c055a57db1b0016759fbd35','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};</script>
+        <script src="https://www.highperformanceformat.com/0954ebc33c055a57db1b0016759fbd35/invoke.js"></script>
+    </div>
+
+    <h2 class="text-center text-xl font-bold my-4">আশ্চর্য জনক ডিল</h2>
+
+    <!-- Banner Ad 2 -->
+    <div class="p-2 text-center my-4">
+        <script src="https://pl30320118.effectivecpmnetwork.com/e3/ef/16/e3ef1602ca15334e4445c71c53892196.js"></script>
+    </div>
+
+    <!-- Products Grid -->
+    <div id="product-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4"></div>
+
+    <!-- Video Section -->
+    <div id="video-section" class="p-4 text-center">
+        <h3 class="font-bold mb-2">ভিডিও রিভিউ</h3>
+        <iframe id="main-video" class="w-full h-56 rounded-lg" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <!-- Footer Links & Actions -->
+    <div class="p-6 text-center bg-white mt-8">
+        <a href="https://www.appcreator24.com/app4117509-d3q8rk" target="_blank" class="block bg-orange-600 text-white py-3 rounded-full font-bold mb-6 hover:bg-orange-700">অ্যাপ ডাউনলোড করুন</a>
         
-        products.forEach((product) => {
-            // আপনার দেওয়া রিকোয়েস্ট অনুযায়ী রেটিং স্ট্রিং
-            const ratingMarkup = `<div style="font-size: 10px; color: #ff9900; margin: 2px 0;">⭐ 8.5 (667) 23k sold</div>`;
-            
-            container.innerHTML += `
-                <div class="product-card">
-                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" class="product-img" alt="">
-                    <div class="product-info">
-                        <div>
-                            <div class="product-name">${product.name}</div>
-                            <div class="price-row">
-                                <span class="current-price">৳ ${product.price}</span>
-                            </div>
-                            ${ratingMarkup}
-                        </div>
-                        <!-- এখানে অর্ডার লিংকের বদলে সরাসরি এফিলিয়েট লিংক বসবে -->
-                        <a href="${product.affiliateLink || '#'}" target="_blank" class="order-btn" style="background:#00b74a;">
-                            <i class="fa-solid fa-cart-shopping"></i> Buy Now
-                        </a>
-                    </div>
-                </div>
-            `;
+        <div class="flex justify-center gap-6 text-2xl mb-6">
+            <a href="https://www.facebook.com/share/1HAbWSoTB5/" target="_blank">📘</a>
+            <a href="https://www.youtube.com/@darazbangladesh2026" target="_blank">🎥</a>
+            <a href="https://vm.tiktok.com/ZSXHmvs9r/" target="_blank">🎵</a>
+        </div>
+        
+        <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" class="block bg-red-600 text-white py-3 rounded-full font-bold mb-4">আজকের ধামাকা অফার ৭০% ডিসকাউন্ট</a>
+        <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" class="block bg-orange-500 text-white py-3 rounded-full font-bold">৬০% বিশেষ অফার</a>
+    </div>
+
+    <!-- Chatbot -->
+    <div id="chatbot-container" class="fixed bottom-4 right-4 z-50">
+        <div id="chat-window" class="hidden w-72 h-96 bg-white border border-gray-300 rounded-lg shadow-xl mb-2 flex flex-col">
+            <div class="bg-orange-600 text-white p-2 font-bold">কাস্টমার সাপোর্ট</div>
+            <div id="chat-messages" class="flex-1 p-2 overflow-y-auto text-sm space-y-2">
+                <div class="text-left p-1 bg-orange-100 rounded my-1"><b>Bot:</b> হ্যালো! আমাদের সাথে যোগাযোগের জন্য ধন্যবাদ। আপনি কি আমাদের অফিসিয়াল টিমের সাথে কথা বলতে চান?</div>
+            </div>
+            <div class="p-2 border-t flex">
+                <input id="chat-input" type="text" class="flex-1 border rounded p-1 outline-none text-xs" placeholder="আপনার প্রশ্নটি লিখুন...">
+                <button onclick="sendMessage()" class="bg-orange-600 text-white px-2 rounded ml-1 text-xs">Send</button>
+            </div>
+        </div>
+        <button onclick="document.getElementById('chat-window').classList.toggle('hidden')" class="bg-orange-600 text-white p-4 rounded-full shadow-lg">💬</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
+            authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
+            projectId: "daraz-bangladesh-6a0f8",
+            storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
+            messagingSenderId: "133315105065",
+            appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        db.collection("products").get().then(snapshot => {
+            const container = document.getElementById('product-container');
+            snapshot.forEach(doc => {
+                const p = doc.data();
+                container.innerHTML += `
+                    <div class="bg-white p-2 rounded shadow">
+                        <img src="${p.imageUrl}" class="w-full aspect-square object-cover rounded">
+                        <div class="mt-2 text-xs font-bold truncate">${p.name}</div>
+                        <div class="text-orange-600 font-bold">৳ ${p.price}</div>
+                        <a href="${p.affiliateLink}" target="_blank" class="block bg-orange-600 text-white text-center py-1 mt-2 rounded text-xs">Buy Now</a>
+                    </div>`;
+            });
         });
-    }
-</script>
+
+        // ভিডিও লিংকের জন্য ডাটাবেস থেকে তথ্য আনা
+        db.collection("settings").doc("video").get().then(doc => {
+            if(doc.exists) document.getElementById('main-video').src = doc.data().url;
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            const query = input.value.trim();
+            
+            if(!query) return;
+            
+            messages.innerHTML += `<div class="text-right p-1 bg-gray-100 rounded my-1"><b>আপনি:</b> ${query}</div>`;
+            input.value = "";
+            
+            setTimeout(() => {
+                let reply = `আপনার বার্তার জন্য ধন্যবাদ! দ্রুত এবং সঠিক সাপোর্টের জন্য আমাদের অফিসিয়াল টিমের সাথে সরাসরি হোয়াটসঅ্যাপে যোগাযোগ করুন। আমাদের টিম আপনার সব সমস্যার সমাধান করবে। <br><br> <a href="https://wa.me/8801764335343" target="_blank" class="text-blue-600 font-bold underline text-center block">এখানে ক্লিক করে হোয়াটসঅ্যাপে মেসেজ দিন</a>`;
+                
+                messages.innerHTML += `<div class="text-left p-1 bg-orange-100 rounded my-1"><b>Bot:</b> ${reply}</div>`;
+                messages.scrollTop = messages.scrollHeight;
+            }, 500);
+        }
+
+        document.getElementById('chat-input').addEventListener("keypress", function(event) {
+            if (event.key === "Enter") sendMessage();
+        });
+    </script>
+</body>
+</html>
