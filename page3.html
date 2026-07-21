@@ -3,311 +3,646 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daraz Bangladesh Affiliate - দারাজ বাংলাদেশ অ্যাফিলিয়েট</title>
-  <!-- Tailwind CSS CDN -->
+  <title>Daraz Bangladesh Affiliate - Official Shopping Portal</title>
+  
+  <!-- Google Fonts: Space Grotesk & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- React 19 & ReactDOM Standalone CDNs -->
+  <script src="https://unpkg.com/react@19/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@19/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Tailwind CSS v3 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Firebase v9 Compat CDNs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          animation: {
+            'marquee': 'marquee 25s linear infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
     }
-    .animate-marquee {
+    .animate-marquee-custom {
       display: inline-block;
-      animation: marquee 25s linear infinite;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    .animate-marquee-custom:hover {
+      animation-play-state: paused;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .neo-border {
+      border: 3px solid #000000;
+    }
+    .neo-shadow {
+      box-shadow: 4px 4px 0px #000000;
+    }
+    .neo-shadow-lg {
+      box-shadow: 8px 8px 0px #000000;
     }
   </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen">
+<body class="bg-[#FFF9E6] text-slate-900 selection:bg-amber-200 selection:text-amber-900 font-sans">
+  
+  <div id="root"></div>
 
-  <!-- Splash Screen Modal (2 Seconds) -->
-  <div id="splash-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 transition-opacity duration-500">
-    <div class="relative w-full h-full max-w-4xl max-h-[90vh] flex flex-col items-center justify-center overflow-hidden">
-      <button onclick="closeSplash()" class="absolute top-4 right-4 z-10 px-4 py-1.5 bg-orange-600 text-white font-medium text-xs rounded-full shadow-lg">
-        স্কিপ করুন (Skip) &rarr;
-      </button>
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi72IMZXfXaaUDD0iOVK7CfOn6Yjm91CFYWkOQpOhPBYjZy4F-CkywOy77zn7XNGXIsne2efTZXpeimqdHhpU19IdQGWMPtI3KASPGm8TRogIUljtcsi6D8qqZOZHiOTx1sMdx2ZFyLH6f15Wya9SsCTWSVyGUuTc9d4kjUKaGHsV3ENgQzFXNSwN_5C-o/s3158/CollageMaker_20260721_223530195.jpg" alt="Splash" class="w-full h-full object-contain rounded-xl shadow-2xl">
-    </div>
-  </div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
 
-  <!-- Header -->
-  <header class="w-full bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 text-white shadow-xl">
-    <div className="max-w-7xl mx-auto px-4 py-6 text-center md:text-left">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex flex-col sm:flex-row items-center gap-3">
-          <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="p-1 bg-white rounded-2xl shadow-lg border-2 border-amber-300">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhOyI32J9aY3-yGAXDhlETdKxtYFJGy8S0dUhyphenhyphenrj6B6-QKwGZn-4rnbxawGSRUVPelpZWTo3HAJcj6EPvKouGRqHW2Dw0QQcgMpbU6NrWGci09rO8yGtFn5XCVpBHKrFCwkzL9LwNEZCSs7FEFelvgjqrrciX4GXPz_QDt6g2kdp5hkZ6o7kaYrp_QvGeE/s320/ChatGPT%20Image%20Jul%2016,%202026,%2010_50_35%20PM.png" alt="Logo" class="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-xl">
-          </a>
-          <div>
-            <h1 class="text-2xl sm:text-4xl font-black text-white">Daraz Bangladesh Affiliate</h1>
-            <p class="text-orange-100 text-xs sm:text-sm font-medium">দারাজ বাংলাদেশ অফিশিয়াল প্রমোশনাল শপিং পোর্টাল</p>
-          </div>
-        </div>
-      </div>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyACgKVsEx6ec0I3OJ6fH7KemGgNmk3V2nY",
+      authDomain: "daraz-bangladesh-6a0f8.firebaseapp.com",
+      projectId: "daraz-bangladesh-6a0f8",
+      storageBucket: "daraz-bangladesh-6a0f8.firebasestorage.app",
+      messagingSenderId: "133315105065",
+      appId: "1:133315105065:web:8b8fe1cd98fa61def3e738"
+    };
 
-      <div class="mt-4 pt-3 border-t border-white/20 text-center">
-        <h2 class="text-3xl sm:text-6xl font-black text-yellow-300 uppercase font-serif tracking-wider">Rose Benefit</h2>
-        <p class="text-white/90 text-sm font-semibold mt-1">🌹 বিশেষ রোজ বেনিফিট ডিসকাউন্ট অফার সমাহার 🌹</p>
-      </div>
-
-      <div class="mt-5 w-full flex justify-center">
-        <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="block w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border-4 border-yellow-300">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhaIFaxZSxeieNuZBjZFJX7DCv2utrxDp6-S8bsqjV7C-2k9sE9T-4PotBwMfLDklN_LgP_6PZFrl8V8IazG8wCGGCARo3gL9UiWrvSn97rZMymXMsC85UnX1N6jyc6VDiMUg_ahR8MfL0Mqo5jm4fxHk74-wP88kgQk2_a9W6O0YRbqr6_pbRKpd4rOm4/s320/ChatGPT%20Image%20Jul%2018,%202026,%2001_01_16%20AM.png" alt="Banner" class="w-full h-auto">
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Marquee Ticker -->
-  <div class="w-full bg-slate-900 text-yellow-300 py-2.5 overflow-hidden border-y-2 border-yellow-400">
-    <div class="whitespace-nowrap animate-marquee font-bold text-sm sm:text-base">
-      🔥 দারাজ বাংলাদেশ এক্সক্লুসিভ রোজ বেনিফিট প্রমোশন! সব পণ্যে পাচ্ছেন ৭০% এবং ৮০% পর্যন্ত সরাসরি ছাড়! 🚚 ফ্রি ডেলিভারি অফার পেতে অর্ডার করুন এখনই!
-    </div>
-  </div>
-
-  <!-- Promotion 70% Off Button -->
-  <div class="max-w-7xl mx-auto my-4 px-4">
-    <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="flex items-center justify-center gap-3 w-full py-4 px-6 bg-gradient-to-r from-red-600 via-orange-600 to-amber-500 text-white font-black text-xl rounded-2xl shadow-xl border-2 border-yellow-300">
-      🔥 প্রমোশন ৭০% অফ অফার পান (Promotion 70% Off) 🔥
-    </a>
-  </div>
-
-  <!-- Product Grid (4 Per Row) -->
-  <main class="max-w-7xl mx-auto px-4 my-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&auto=format&fit=crop&q=80" alt="M10 TWS Wireless Earbuds Bluetooth 5.1 Noise Cancelling Headphones Touch Control" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">M10 TWS Wireless Earbuds Bluetooth 5.1 Noise Cancelling Headphones Touch Control</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ৪৫০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ১২৫০</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.8 (620) • 24k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-1 rounded-lg text-xs font-bold">🚚 ফ্রি ডেলিভারি (Free Delivery)</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80" alt="T800 Ultra Smartwatch Full Screen Bluetooth Call Heart Rate Monitor IP67 Waterproof" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">T800 Ultra Smartwatch Full Screen Bluetooth Call Heart Rate Monitor IP67 Waterproof</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ৮৯০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ২৪৯৯</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.7 (890) • 32k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-1 rounded-lg text-xs font-bold">🚚 ফ্রি ডেলিভারি (Free Delivery)</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600&auto=format&fit=crop&q=80" alt="Luxury Rose Gold Ladies Watch Set with Crystal Bracelet Premium Fashion Gift Box" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">Luxury Rose Gold Ladies Watch Set with Crystal Bracelet Premium Fashion Gift Box</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ৫৯০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ১৮৫০</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.9 (412) • 15k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-slate-100 text-slate-400 border border-slate-200 px-2 py-1 rounded-lg text-xs filter blur-[0.6px]">❌ ফ্রি ডেলিভারি নেই</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1608248597261-833258657640?w=600&auto=format&fit=crop&q=80" alt="Organic Bulgarian Rose Water Facial Toner Pure Natural Hydrating Glowing Skin Mist" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">Organic Bulgarian Rose Water Facial Toner Pure Natural Hydrating Glowing Skin Mist</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ৩৫০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ৯৫০</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.6 (340) • 18k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-1 rounded-lg text-xs font-bold">🚚 ফ্রি ডেলিভারি (Free Delivery)</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&auto=format&fit=crop&q=80" alt="Men Ultra Slim Leather Wallet Genuine RFID Blocking Card Holder Pocket Organizer" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">Men Ultra Slim Leather Wallet Genuine RFID Blocking Card Holder Pocket Organizer</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ৩৯০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ১২০০</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.8 (512) • 19k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-1 rounded-lg text-xs font-bold">🚚 ফ্রি ডেলিভারি (Free Delivery)</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1609592807983-ef88785c4bfb?w=600&auto=format&fit=crop&q=80" alt="Portable Mini Power Bank 10000mAh Dual USB Fast Charging LED Display Compact" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">Portable Mini Power Bank 10000mAh Dual USB Fast Charging LED Display Compact</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ৭৫০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ১৯৫০</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.7 (780) • 28k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-slate-100 text-slate-400 border border-slate-200 px-2 py-1 rounded-lg text-xs filter blur-[0.6px]">❌ ফ্রি ডেলিভারি নেই</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop&q=80" alt="Trending Women Cotton Designer Salwar Kameez Suit Stitched Collection" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">Trending Women Cotton Designer Salwar Kameez Suit Stitched Collection</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ১২৯০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ৩৫০০</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.9 (920) • 45k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-1 rounded-lg text-xs font-bold">🚚 ফ্রি ডেলিভারি (Free Delivery)</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-        <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <div class="relative aspect-square w-full bg-slate-100">
-            <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&auto=format&fit=crop&q=80" alt="RGB Gaming Headphone with Mic HD Surround Sound Noise Reduction Cushion" class="w-full h-full object-cover">
-          </div>
-          <div class="p-3.5 flex flex-col flex-grow justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 line-clamp-2">RGB Gaming Headphone with Mic HD Surround Sound Noise Reduction Cushion</h3>
-              <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-lg font-extrabold text-orange-600">৳ ৮৫০</span>
-                <span class="text-xs text-slate-400 line-through">৳ ২২০০</span>
-              </div>
-              <div class="mt-1 text-xs text-slate-600">
-                ⭐ 4.8 (457) • 17k sold
-              </div>
-              <div class="mt-2">
-                <div class="bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-1 rounded-lg text-xs font-bold">🚚 ফ্রি ডেলিভারি (Free Delivery)</div>
-              </div>
-            </div>
-            <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="mt-2 w-full py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-sm rounded-xl text-center">
-              এখনই কিনুন (Buy Now)
-            </a>
-          </div>
-        </div>
-      
-    </div>
-  </main>
-
-  <!-- 80% Off, Mega Offer, App Download -->
-  <div class="max-w-7xl mx-auto px-4 my-8 space-y-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="p-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black text-xl rounded-2xl text-center">
-        ৮০% অফ অফার (Eighty Percent Off)
-      </a>
-      <a href="https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607" target="_blank" class="p-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-xl rounded-2xl text-center">
-        মেগা অফার (Mega Offer)
-      </a>
-    </div>
-    <a href="https://www.appcreator24.com/app4121742-fy4o8q" target="_blank" class="block p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xl rounded-2xl text-center">
-      Download Amazing Shopping App Free
-    </a>
-  </div>
-
-  <!-- Social Media Section -->
-  <footer class="bg-slate-900 text-white py-8 text-center">
-    <h3 class="text-xs uppercase font-extrabold mb-4 text-slate-400">আমাদের সোশ্যাল মিডিয়া লিংকসমূহ</h3>
-    <div class="flex justify-center gap-6 flex-wrap">
-      <a href="https://www.facebook.com/share/17iurH6h42/" target="_blank" class="px-4 py-2 bg-blue-600 text-white rounded-full font-bold text-xs">Facebook</a>
-      <a href="https://www.youtube.com/@darazbangladesh2026" target="_blank" class="px-4 py-2 bg-red-600 text-white rounded-full font-bold text-xs">YouTube</a>
-      <a href="https://vm.tiktok.com/ZS9rDNE81pUwE-sKzlV/" target="_blank" class="px-4 py-2 bg-slate-800 text-white rounded-full font-bold text-xs">TikTok</a>
-    </div>
-  </footer>
-
-  <!-- Chatbot Widget -->
-  <div class="fixed bottom-5 right-5 z-40">
-    <div class="bg-orange-600 text-white p-3.5 rounded-full shadow-2xl font-bold text-xs">
-      💬 ডেলিভারি তথ্যের জন্য ইমেইল করুন: daraz.bangladesh.shop@gmail.com
-    </div>
-  </div>
-
-  <script>
-    setTimeout(closeSplash, 2000);
-    function closeSplash() {
-      const splash = document.getElementById('splash-modal');
-      if (splash) splash.style.display = 'none';
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
+    const db = firebase.firestore();
+
+    const DEFAULT_AFFILIATE_LINK = "https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607";
+    const APP_DOWNLOAD_LINK = "https://www.appcreator24.com/app4121742-fy4o8q";
+
+    const initialProducts = [
+      {
+        id: 'p1',
+        name: 'M10 TWS Wireless Earbuds Bluetooth 5.1 Noise Cancelling Headphones',
+        price: '৳ ১২৫০',
+        offerPrice: '৳ ৪৫০',
+        rating: '4.8',
+        reviewsCount: '620',
+        soldCount: '24k sold',
+        isFreeDelivery: true,
+        imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&auto=format&fit=crop&q=80',
+        affiliateUrl: DEFAULT_AFFILIATE_LINK,
+        videoUrl: 'https://youtube.com/shorts/Q-8cio5WR4g?si=GOznssz0Eds4wpdU'
+      },
+      {
+        id: 'p2',
+        name: 'T800 Ultra Smartwatch Full Screen Bluetooth Call Heart Rate Monitor',
+        price: '৳ ২৪৯৯',
+        offerPrice: '৳ ৮৯০',
+        rating: '4.7',
+        reviewsCount: '890',
+        soldCount: '32k sold',
+        isFreeDelivery: true,
+        imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80',
+        affiliateUrl: DEFAULT_AFFILIATE_LINK
+      },
+      {
+        id: 'p3',
+        name: 'Luxury Rose Gold Ladies Watch Set with Crystal Bracelet Fashion Box',
+        price: '৳ ১৮৫০',
+        offerPrice: '৳ ৫৯০',
+        rating: '4.9',
+        reviewsCount: '412',
+        soldCount: '15k sold',
+        isFreeDelivery: false,
+        imageUrl: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600&auto=format&fit=crop&q=80',
+        affiliateUrl: DEFAULT_AFFILIATE_LINK
+      },
+      {
+        id: 'p4',
+        name: 'Organic Bulgarian Rose Water Facial Toner Pure Natural Glowing Skin Mist',
+        price: '৳ ৯৫০',
+        offerPrice: '৳ ৩৫০',
+        rating: '4.6',
+        reviewsCount: '340',
+        soldCount: '18k sold',
+        isFreeDelivery: true,
+        imageUrl: 'https://images.unsplash.com/photo-1608248597261-833258657640?w=600&auto=format&fit=crop&q=80',
+        affiliateUrl: DEFAULT_AFFILIATE_LINK
+      }
+    ];
+
+    function App() {
+      const [showSplash, setShowSplash] = useState(true);
+      const [products, setProducts] = useState(initialProducts);
+      const [freeDeliveryTicked, setFreeDeliveryTicked] = useState(true);
+      const [isAdmin, setIsAdmin] = useState(false);
+      const [adminPassword, setAdminPassword] = useState("");
+      const [showAdminModal, setShowAdminModal] = useState(false);
+      const [adminError, setAdminError] = useState("");
+
+      // Form state for new product upload
+      const [newName, setNewName] = useState("");
+      const [newPrice, setNewPrice] = useState("");
+      const [newOfferPrice, setNewOfferPrice] = useState("");
+      const [newImage, setNewImage] = useState("");
+      const [newAffiliate, setNewAffiliate] = useState(DEFAULT_AFFILIATE_LINK);
+      const [newVideo, setNewVideo] = useState("");
+      const [isUploading, setIsUploading] = useState(false);
+
+      // Chatbot state
+      const [isChatOpen, setIsChatOpen] = useState(false);
+      const [chatMessages, setChatMessages] = useState([
+        {
+          id: '1',
+          sender: 'bot',
+          text: 'স্বাগতম! দারাজ বাংলাদেশ অ্যাফিলিয়েট কাস্টমার কেয়ারে আপনাকে কীভাবে সাহায্য করতে পারি? যেকোনো ডেলিভারি তথ্যের জন্য ইমেইল করুন: daraz.bangladesh.shop@gmail.com',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+      const [chatInput, setChatInput] = useState("");
+      const [isTyping, setIsTyping] = useState(false);
+      const chatEndRef = useRef(null);
+
+      // Video Modal state
+      const [activeVideoUrl, setActiveVideoUrl] = useState(null);
+
+      useEffect(() => {
+        const timer = setTimeout(() => setShowSplash(false), 2050);
+        return () => clearTimeout(timer);
+      }, []);
+
+      // Fetch products from Firebase Firestore
+      useEffect(() => {
+        const unsubscribe = db.collection("products").onSnapshot((snapshot) => {
+          const fetched = [];
+          snapshot.forEach((doc) => {
+            fetched.push({ id: doc.id, ...doc.data() });
+          });
+          if (fetched.length > 0) {
+            setProducts([...fetched, ...initialProducts]);
+          }
+        }, (error) => {
+          console.error("Firestore fetch error:", error);
+        });
+        return () => unsubscribe();
+      }, []);
+
+      useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [chatMessages, isTyping]);
+
+      const handleAdminLogin = (e) => {
+        e.preventDefault();
+        if (adminPassword === "290324") {
+          setIsAdmin(true);
+          setShowAdminModal(false);
+          setAdminError("");
+          setAdminPassword("");
+        } else {
+          setAdminError("ভুল পাসওয়ার্ড! (Correct password is 290324)");
+        }
+      };
+
+      const handleUploadProduct = async (e) => {
+        e.preventDefault();
+        if (!newName || !newPrice || !newImage) {
+          alert("অনুগ্রহ করে পণ্যের নাম, দাম এবং ছবির লিংক দিন।");
+          return;
+        }
+
+        setIsUploading(true);
+        try {
+          const productData = {
+            name: newName,
+            price: `৳ ${newPrice}`,
+            offerPrice: newOfferPrice ? `৳ ${newOfferPrice}` : `৳ ${newPrice}`,
+            rating: "4.8",
+            reviewsCount: "150",
+            soldCount: "1.2k sold",
+            isFreeDelivery: true,
+            imageUrl: newImage,
+            affiliateUrl: newAffiliate || DEFAULT_AFFILIATE_LINK,
+            videoUrl: newVideo || "",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          };
+
+          await db.collection("products").add(productData);
+          alert("প্রোডাক্ট সফলভাবে আপলোড হয়েছে!");
+          setNewName("");
+          setNewPrice("");
+          setNewOfferPrice("");
+          setNewImage("");
+          setNewVideo("");
+          setShowAdminModal(false);
+        } catch (err) {
+          console.error("Upload error:", err);
+          alert("আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+        } finally {
+          setIsUploading(false);
+        }
+      };
+
+      const handleSendMessage = (e) => {
+        e.preventDefault();
+        if (!chatInput.trim()) return;
+
+        const userMsg = {
+          id: Date.now().toString(),
+          sender: 'user',
+          text: chatInput,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setChatMessages(prev => [...prev, userMsg]);
+        const query = chatInput.toLowerCase();
+        setChatInput("");
+        setIsTyping(true);
+
+        setTimeout(() => {
+          let botReply = "আপনার প্রশ্নটির জন্য ধন্যবাদ! যেকোনো অর্ডার, শিপিং বা ডেলিভারি তথ্যের জন্য অনুগ্রহ করে অফিসিয়াল ইমেইলে যোগাযোগ করুন: daraz.bangladesh.shop@gmail.com";
+          
+          if (query.includes("delivery") || query.includes("ডেলিভারি") || query.includes("শিপিং") || query.includes("অর্ডার")) {
+            botReply = "প্রিয় গ্রাহক, পণ্য ডেলিভারি ও ট্র্যাকিং সংক্রান্ত তথ্যের জন্য সরাসরি আমাদের ইমেইলে মেসেজ পাঠান: daraz.bangladesh.shop@gmail.com";
+          } else if (query.includes("discount") || query.includes("offer") || query.includes("ডিসকাউন্ট") || query.includes("অফার")) {
+            botReply = "বর্তমানে আমাদের সাইটে ৭০% থেকে ৮০% পর্যন্ত মেগা রোজ বেনিফিট ডিসকাউন্ট অফার চলছে! উপরের প্রমোশন বাটনগুলো থেকে লুফে নিন।";
+          } else if (query.includes("app") || query.includes("অ্যাপ")) {
+            botReply = "আপনি আমাদের অফিসিয়াল অ্যাপটি সম্পূর্ণ বিনামূল্যে ডাউনলোড করতে পারেন হোমপেজে থাকা ডাউনলোড বাটন থেকে!";
+          }
+
+          setChatMessages(prev => [...prev, {
+            id: (Date.now() + 1).toString(),
+            sender: 'bot',
+            text: botReply,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }]);
+          setIsTyping(false);
+        }, 1000);
+      };
+
+      const getEmbedUrl = (url) => {
+        if (!url) return null;
+        if (url.includes('youtube.com/shorts/')) {
+          const parts = url.split('youtube.com/shorts/')[1].split('?')[0];
+          return `https://www.youtube.com/embed/${parts}?autoplay=1`;
+        }
+        if (url.includes('watch?v=')) {
+          const parts = url.split('v=')[1].split('&')[0];
+          return `https://www.youtube.com/embed/${parts}?autoplay=1`;
+        }
+        if (url.includes('youtu.be/')) {
+          const parts = url.split('youtu.be/')[1].split('?')[0];
+          return `https://www.youtube.com/embed/${parts}?autoplay=1`;
+        }
+        return url;
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col font-sans bg-[#FFF9E6]">
+          
+          {/* Splash Screen */}
+          {showSplash && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md">
+              <div className="relative w-full max-w-lg p-4 flex flex-col items-center justify-center">
+                <img
+                  src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi72IMZXfXaaUDD0iOVK7CfOn6Yjm91CFYWkOQpOhPBYjZy4F-CkywOy77zn7XNGXIsne2efTZXpeimqdHhpU19IdQGWMPtI3KASPGm8TRogIUljtcsi6D8qqZOZHiOTx1sMdx2ZFyLH6f15Wya9SsCTWSVyGUuTc9d4kjUKaGHsV3ENgQzFXNSwN_5C-o/s3158/CollageMaker_20260721_223530195.jpg"
+                  alt="Daraz Splash"
+                  className="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border-4 border-amber-400 animate-pulse"
+                />
+                <button
+                  onClick={() => setShowSplash(false)}
+                  className="mt-4 px-6 py-2 bg-orange-600 text-white font-bold rounded-full shadow-lg"
+                >
+                  স্কিপ করুন &rarr;
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Header */}
+          <header className="w-full bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 text-white shadow-xl">
+            <div className="bg-orange-700/80 text-xs py-1.5 px-4 border-b border-orange-400/30">
+              <div className="max-w-7xl mx-auto flex items-center justify-between">
+                <span>✨ দারাজ বাংলাদেশ অ্যাফিলিয়েট অফিসিয়াল সাইট | ৭০% পর্যন্ত স্পেশাল ডিসকাউন্ট</span>
+                <button
+                  onClick={() => setShowAdminModal(true)}
+                  className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-xs font-bold transition-colors"
+                >
+                  {isAdmin ? "🔓 এডমিন অ্যাক্টিভ" : "🔒 এডমিন আপলোড"}
+                </button>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 py-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <a href={DEFAULT_AFFILIATE_LINK} target="_blank" rel="noopener noreferrer" className="p-1 bg-white rounded-2xl shadow-lg border-2 border-amber-300">
+                    <img
+                      src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhOyI32J9aY3-yGAXDhlETdKxtYFJGy8S0dUhyphenhyphenrj6B6-QKwGZn-4rnbxawGSRUVPelpZWTo3HAJcj6EPvKouGRqHW2Dw0QQcgMpbU6NrWGci09rO8yGtFn5XCVpBHKrFCwkzL9LwNEZCSs7FEFelvgjqrrciX4GXPz_QDt6g2kdp5hkZ6o7kaYrp_QvGeE/s320/ChatGPT%20Image%20Jul%2016,%202026,%2010_50_35%20PM.png"
+                      alt="Logo"
+                      className="w-16 h-16 object-contain rounded-xl"
+                    />
+                  </a>
+                  <div>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
+                      Daraz Bangladesh Affiliate
+                    </h1>
+                    <p className="text-orange-100 text-sm font-medium">
+                      দারাজ বাংলাদেশ এর একমাত্র নির্ভরযোগ্য অফিশিয়াল প্রমোশনাল শপিং পোর্টাল
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Big Text Rose Benefit */}
+              <div className="mt-6 text-center">
+                <h2 className="text-4xl sm:text-6xl font-black tracking-wider text-yellow-300 uppercase drop-shadow-lg font-serif">
+                  Rose Benefit
+                </h2>
+                <p className="text-white/90 text-base font-semibold mt-1">
+                  🌹 বিশেষ রোজ বেনিফিট ডিসকাউন্ট অফার সমাহার 🌹
+                </p>
+              </div>
+
+              {/* Banner */}
+              <div className="mt-5 w-full flex justify-center">
+                <a href={DEFAULT_AFFILIATE_LINK} target="_blank" rel="noopener noreferrer" className="block w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border-4 border-yellow-300 hover:scale-[1.01] transition-transform">
+                  <img
+                    src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhaIFaxZSxeieNuZBjZFJX7DCv2utrxDp6-S8bsqjV7C-2k9sE9T-4PotBwMfLDklN_LgP_6PZFrl8V8IazG8wCGGCARo3gL9UiWrvSn97rZMymXMsC85UnX1N6jyc6VDiMUg_ahR8MfL0Mqo5jm4fxHk74-wP88kgQk2_a9W6O0YRbqr6_pbRKpd4rOm4/s320/ChatGPT%20Image%20Jul%2018,%202026,%2001_01_16%20AM.png"
+                    alt="Banner"
+                    className="w-full h-auto max-h-56 object-cover"
+                  />
+                </a>
+              </div>
+            </div>
+          </header>
+
+          {/* Ticker */}
+          <div className="w-full bg-slate-900 text-yellow-300 py-2.5 overflow-hidden border-y-2 border-yellow-400">
+            <div className="max-w-7xl mx-auto flex items-center px-4">
+              <div className="bg-orange-600 text-white text-xs font-bold px-3 py-1 rounded-md shrink-0 mr-3">
+                মেগা অফার:
+              </div>
+              <div className="relative overflow-hidden w-full">
+                <div className="whitespace-nowrap animate-marquee flex items-center gap-8 font-semibold text-sm">
+                  <span>🔥 দারাজ বাংলাদেশ এক্সক্লুসিভ রোজ বেনিফিট প্রমোশন! সব পণ্যে পাচ্ছেন ৭০% এবং ৮০% পর্যন্ত সরাসরি ছাড়!</span>
+                  <span className="text-white">🚚 ফ্রি ডেলিভারি অফার পেতে টিক দিন এবং আপনার পছন্দের প্রোডাক্ট অর্ডার করুন এখনই!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
+          <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+            
+            {/* Promo Buttons Section */}
+            <div className="space-y-4 max-w-4xl mx-auto">
+              <a
+                href={DEFAULT_AFFILIATE_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-gradient-to-r from-red-600 via-orange-600 to-amber-500 text-white font-extrabold text-xl rounded-2xl shadow-xl border-2 border-yellow-300 hover:scale-[1.01] transition-transform text-center"
+              >
+                🔥 প্রমোশন ৭০% অফ অফার পান (Promotion 70% Off) 🔥
+              </a>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a
+                  href={DEFAULT_AFFILIATE_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 py-4 px-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-2xl shadow-lg border-2 border-pink-300 hover:scale-[1.01] transition-transform"
+                >
+                  🎁 ৮০% অফ অফার (Eighty Percent Off)
+                </a>
+                <a
+                  href={DEFAULT_AFFILIATE_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 py-4 px-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-lg rounded-2xl shadow-lg border-2 border-emerald-300 hover:scale-[1.01] transition-transform"
+                >
+                  ⚡ মেগা অফার (Mega Offer)
+                </a>
+              </div>
+
+              <a
+                href={APP_DOWNLOAD_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-lg rounded-2xl shadow-xl border-2 border-sky-300 hover:scale-[1.01] transition-transform text-center"
+              >
+                📱 Download Amazing Shopping App Free (বিনামূল্যে অ্যাপ ডাউনলোড করুন)
+              </a>
+            </div>
+
+            {/* Products Catalog Header */}
+            <div className="flex flex-col sm:flex-row items-center justify-between bg-white p-4 rounded-2xl neo-border neo-shadow gap-4">
+              <h3 className="text-xl font-extrabold text-orange-600 uppercase">
+                ✨ স্পেশাল প্রোডাক্টস ক্যাটালগ ({products.length} Items)
+              </h3>
+              <div className="flex items-center gap-2 bg-amber-50 px-4 py-2 rounded-xl border-2 border-black">
+                <input
+                  type="checkbox"
+                  id="freeDeliveryFilter"
+                  checked={freeDeliveryTicked}
+                  onChange={(e) => setFreeDeliveryTicked(e.target.checked)}
+                  className="w-4 h-4 text-orange-600 rounded"
+                />
+                <label htmlFor="freeDeliveryFilter" className="text-xs font-bold uppercase cursor-pointer">
+                  🚚 ফ্রি ডেলিভারি ফিল্টার
+                </label>
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map((product) => {
+                if (freeDeliveryTicked && !product.isFreeDelivery) return null;
+                return (
+                  <div key={product.id} className="bg-white rounded-2xl neo-border neo-shadow overflow-hidden flex flex-col justify-between group">
+                    <div className="relative aspect-square w-full bg-slate-100 overflow-hidden">
+                      <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80';
+                        }}
+                      />
+                      {product.videoUrl && (
+                        <button
+                          onClick={() => setActiveVideoUrl(product.videoUrl)}
+                          className="absolute bottom-2 right-2 bg-red-600 text-white text-xs px-2.5 py-1 rounded-full shadow-md font-bold"
+                        >
+                          ▶ ভিডিও রিভিউ
+                        </button>
+                      )}
+                      {product.isFreeDelivery && (
+                        <div className="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded shadow">
+                          🚚 ফ্রি ডেলিভারি
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-4 flex flex-col flex-1 justify-between gap-3">
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-800 line-clamp-2">{product.name}</h4>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-xl font-extrabold text-orange-600">{product.offerPrice}</span>
+                          <span className="text-xs text-slate-400 line-through font-semibold">{product.price}</span>
+                        </div>
+                      </div>
+
+                      <a
+                        href={product.affiliateUrl || DEFAULT_AFFILIATE_LINK}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-orange-600 hover:bg-orange-700 text-white text-center py-2.5 rounded-xl font-extrabold text-xs uppercase neo-border neo-shadow transition-transform active:scale-95"
+                      >
+                        🛒 অর্ডার করুন (Buy Now)
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+          </main>
+
+          {/* Footer */}
+          <footer className="bg-white border-t-4 border-black mt-16 py-8 px-6 text-center text-xs font-semibold text-slate-600">
+            <div className="max-w-7xl mx-auto flex flex-col items-center gap-3">
+              <p className="font-extrabold text-sm text-slate-900">© 2026 Daraz Bangladesh Affiliate. All Rights Reserved.</p>
+              <p>দেলিভারি ও যেকোনো সহযোগিতার জন্য ইমেইল করুন: <a href="mailto:daraz.bangladesh.shop@gmail.com" className="text-orange-600 font-bold underline">daraz.bangladesh.shop@gmail.com</a></p>
+            </div>
+          </footer>
+
+          {/* Chatbot Widget */}
+          <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+            {isChatOpen && (
+              <div className="bg-white w-[350px] sm:w-[380px] h-[480px] rounded-3xl neo-border neo-shadow-lg flex flex-col overflow-hidden mb-4 animate-in fade-in slide-in-from-bottom-5">
+                <div className="bg-orange-600 p-4 text-white flex items-center justify-between border-b-3 border-black">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🤖</span>
+                    <div>
+                      <h4 className="font-bold text-sm">দারাজ কাস্টমার কেয়ার</h4>
+                      <span className="text-[10px] text-yellow-200 font-semibold">Online Support Agent</span>
+                    </div>
+                  </div>
+                  <button onClick={() => setIsChatOpen(false)} className="text-white font-bold text-lg">✕</button>
+                </div>
+
+                <div className="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3">
+                  {chatMessages.map((msg) => (
+                    <div key={msg.id} className={`flex flex-col max-w-[85%] ${msg.sender === 'user' ? 'ml-auto items-end' : 'mr-auto items-start'}`}>
+                      <div className={`p-3 rounded-2xl text-xs font-medium neo-border ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-white text-slate-800'}`}>
+                        {msg.text}
+                      </div>
+                      <span className="text-[9px] text-slate-400 mt-1">{msg.timestamp}</span>
+                    </div>
+                  ))}
+                  {isTyping && (
+                    <div className="bg-white p-3 rounded-2xl text-xs font-bold neo-border text-slate-500 animate-pulse">টাইপ করছে...</div>
+                  )}
+                  <div ref={chatEndRef} />
+                </div>
+
+                <form onSubmit={handleSendMessage} className="p-3 bg-white border-t-3 border-black flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="আপনার প্রশ্ন এখানে লিখুন..."
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    className="flex-1 px-3 py-2 text-xs rounded-xl neo-border bg-slate-50 font-semibold focus:outline-none"
+                  />
+                  <button type="submit" className="bg-orange-600 text-white px-4 py-2 rounded-xl neo-border font-bold text-xs">পাঠান</button>
+                </form>
+              </div>
+            )}
+
+            <button
+              onClick={() => setIsChatOpen(!isChatOpen)}
+              className="bg-yellow-400 text-slate-950 p-4 rounded-full neo-border neo-shadow hover:scale-110 transition-all font-bold text-xl animate-bounce"
+            >
+              💬
+            </button>
+          </div>
+
+          {/* Admin Modal */}
+          {showAdminModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+              <div className="bg-white w-full max-w-md rounded-3xl neo-border neo-shadow-lg p-6 relative">
+                <button onClick={() => setShowAdminModal(false)} className="absolute top-4 right-4 text-slate-500 hover:text-black font-bold">✕</button>
+                
+                {!isAdmin ? (
+                  <form onSubmit={handleAdminLogin} className="space-y-4">
+                    <h3 className="text-xl font-black text-orange-600 uppercase">এডমিন প্যানেল আনলক</h3>
+                    <p className="text-xs text-slate-600">পণ্য আপলোড করতে পাসওয়ার্ড দিন (পাসওয়ার্ড: 290324)</p>
+                    <input
+                      type="password"
+                      placeholder="পাসওয়ার্ড লিখুন..."
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl neo-border text-sm"
+                    />
+                    <button type="submit" className="w-full bg-orange-600 text-white py-3 rounded-xl neo-border font-bold text-sm uppercase">আনলক করুন</button>
+                    {adminError && <p className="text-xs text-red-600 font-bold">{adminError}</p>}
+                  </form>
+                ) : (
+                  <form onSubmit={handleUploadProduct} className="space-y-3">
+                    <h3 className="text-xl font-black text-orange-600 uppercase">নতুন প্রোডাক্ট আপলোড</h3>
+                    <input type="text" placeholder="পণ্যের নাম" value={newName} onChange={e => setNewName(e.target.value)} className="w-full px-3 py-2 text-xs rounded-xl neo-border" required />
+                    <input type="number" placeholder="আসল দাম (টাকা)" value={newPrice} onChange={e => setNewPrice(e.target.value)} className="w-full px-3 py-2 text-xs rounded-xl neo-border" required />
+                    <input type="number" placeholder="অফার দাম (টাকা)" value={newOfferPrice} onChange={e => setNewOfferPrice(e.target.value)} className="w-full px-3 py-2 text-xs rounded-xl neo-border" />
+                    <input type="url" placeholder="ছবির ডিরেক্ট URL (যেমন: ImgBB)" value={newImage} onChange={e => setNewImage(e.target.value)} className="w-full px-3 py-2 text-xs rounded-xl neo-border" required />
+                    <input type="url" placeholder="ভিডিও লিংক (ঐচ্ছিক)" value={newVideo} onChange={e => setNewVideo(e.target.value)} className="w-full px-3 py-2 text-xs rounded-xl neo-border" />
+                    <button type="submit" disabled={isUploading} className="w-full bg-green-600 text-white py-3 rounded-xl neo-border font-bold text-sm uppercase">
+                      {isUploading ? "আপলোড হচ্ছে..." : "প্রোডাক্ট পাবলিশ করুন"}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Video Preview Modal */}
+          {activeVideoUrl && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+              <div className="relative w-full max-w-2xl bg-black rounded-3xl overflow-hidden neo-border">
+                <button onClick={() => setActiveVideoUrl(null)} className="absolute top-3 right-3 z-10 bg-white/20 text-white px-3 py-1 rounded-full font-bold">✕ বন্ধ করুন</button>
+                <div className="aspect-video w-full">
+                  <iframe src={getEmbedUrl(activeVideoUrl)} className="w-full h-full" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
   </script>
 </body>
 </html>
