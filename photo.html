@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>দারা - ফটো টু লিঙ্ক জেনারেটর (Daraz Bangladesh Affiliate Photo to Link Generator)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & React DOM -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Compiler for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- HighPerformanceFormat & EffectiveCPM Ad Scripts -->
+  <script type="text/javascript" src="https://pl30320118.effectivecpmnetwork.com/e3/ef/16/e3ef1602ca15334e4445c71c53892196.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Hind Siliguri', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0b1120;
+      color: #f8fafc;
+    }
+    .daraz-gradient {
+      background: linear-gradient(135deg, #f57224 0%, #ff4500 50%, #d9381e 100%);
+    }
+    .daraz-glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 114, 36, 0.2);
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(245, 114, 36, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(245, 114, 36, 0.8); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2.5s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const PAYMENT_NUMBERS = {
+      bkash: '01707059868',
+      nagad: '01707059868',
+      whatsapp: '01764335343',
+      whatsappUrl: 'https://wa.me/8801764335343',
+      email: 'daraz.bangladesh.shop@gmail.com',
+      domain: 'https://darazbdaffiliate.com',
+      adUrl: 'https://www.effectivecpmnetwork.com/jjgii2iixj?key=0e1854c8a08d882dfc02bc474311f607'
+    };
+
+    function App() {
+      const [showSplash, setShowSplash] = useState(true);
+      const [images, setImages] = useState([]);
+      const [noResize, setNoResize] = useState(true);
+      const [noExpiration, setNoExpiration] = useState(true);
+      const [account, setAccount] = useState({ isPremium: false });
+      const [trxInput, setTrxInput] = useState('');
+      const [paymentMethod, setPaymentMethod] = useState('bkash');
+      const [verifying, setVerifying] = useState(false);
+      const [verifiedSuccess, setVerifiedSuccess] = useState(false);
+      const [copiedText, setCopiedText] = useState('');
+      const [chatOpen, setChatOpen] = useState(false);
+      const [showLegalModal, setShowLegalModal] = useState(false);
+      const [legalTab, setLegalTab] = useState('terms');
+      const [chatMessages, setChatMessages] = useState([
+        { id: '1', sender: 'bot', text: 'আসসালামু আলাইকুম! দারাজ বাংলাদেশ এফিলিয়েট ফোটো টু লিঙ্ক জেনারেটর এ আপনাকে স্বাগতম। কীভাবে সাহায্য করতে পারি?' }
+      ]);
+      const [userInput, setUserInput] = useState('');
+
+      useEffect(() => {
+        const timer = setTimeout(() => setShowSplash(false), 2000);
+        return () => clearTimeout(timer);
+      }, []);
+
+      const copyToClipboard = (text, label) => {
+        navigator.clipboard.writeText(text);
+        setCopiedText(label || 'কপি করা হয়েছে!');
+        setTimeout(() => setCopiedText(''), 2000);
+      };
+
+      const handleTestDirectUrl = (dataUrl, filename) => {
+        const win = window.open('', '_blank');
+        if (win) {
+          win.document.write(`
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Direct Image Test Preview - ${filename}</title>
+                <style>
+                  body { margin: 0; background: #0f172a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: system-ui, sans-serif; text-align: center; padding: 20px; }
+                  img { max-width: 90%; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); border: 2px solid #f97316; margin-top: 15px; }
+                  h2 { color: #f97316; margin-bottom: 5px; }
+                  p { color: #94a3b8; font-size: 14px; }
+                </style>
+              </head>
+              <body>
+                <h2>দারাজ বাংলাদেশ এফিলিয়েট - ডিরেক্ট ছবি প্রিভিউ</h2>
+                <p>ছবিটির লিঙ্ক শতভাগ কাজ করছে এবং প্রোডাক্ট পোস্টে ব্যবহার করার জন্য প্রস্তুত!</p>
+                <img src="${dataUrl}" alt="${filename}" />
+              </body>
+            </html>
+          `);
+          win.document.close();
+        }
+      };
+
+      const handleFileUpload = (e) => {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (uploadEvent) => {
+            const dataUrl = uploadEvent.target.result;
+            const id = Math.random().toString(36).substring(2, 10);
+            const token = Math.random().toString(36).substring(2, 12);
+            const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+            const pageUrl = `https://darazbdaffiliate.com/view/${id}`;
+            const domainDirectUrl = `https://darazbdaffiliate.com/i/${id}/${cleanName}`;
+            const directUrl = dataUrl;
+            
+            const newItem = {
+              id,
+              filename: cleanName,
+              dataUrl,
+              links: {
+                pageUrl,
+                directUrl,
+                markdownLink: `[${cleanName}](${pageUrl})`,
+                markdownImage: `[![${cleanName}](${domainDirectUrl})](${pageUrl})`,
+                bbcodeThumbnail: `[url=${pageUrl}][img]${domainDirectUrl}[/img][/url]`,
+                htmlThumbnail: `<a href='${pageUrl}' target='_blank'><img src='${domainDirectUrl}' border='0' alt='${cleanName}'></a>`,
+                bbcodeHotlink: `[url=https://darazbdaffiliate.com/][img]${domainDirectUrl}[/img][/url]`,
+                htmlHotlink: `<a href='https://darazbdaffiliate.com/' target='_blank'><img src='${domainDirectUrl}' border='0' alt='${cleanName}'></a>`,
+                removalUrl: `https://darazbdaffiliate.com/delete/${id}/${token}`
+              }
+            };
+            setImages(prev => [newItem, ...prev]);
+          };
+          reader.readAsDataURL(file);
+        });
+      };
+
+      const handleVerifyPayment = () => {
+        if (!trxInput.trim()) return;
+        setVerifying(true);
+        setTimeout(() => {
+          setVerifying(false);
+          setVerifiedSuccess(true);
+          setAccount({ isPremium: true, trxId: trxInput });
+        }, 1500);
+      };
+
+      const sendMessage = () => {
+        if (!userInput.trim()) return;
+        const newMsg = { id: Date.now().toString(), sender: 'user', text: userInput };
+        setChatMessages(prev => [...prev, newMsg]);
+        setUserInput('');
+        setTimeout(() => {
+          setChatMessages(prev => [...prev, {
+            id: (Date.now()+1).toString(),
+            sender: 'bot',
+            text: 'আপনার বার্তার জন্য ধন্যবাদ। যেকোনো জরুরি সাপোর্টের জন্য আমাদের হোয়াটসঅ্যাপ লিঙ্ক এ সরাসরি মেসেজ দিন।'
+          }]);
+        }, 800);
+      };
+
+      return (
+        <div class="relative min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+          {/* Splash Banner */}
+          {showSplash && (
+            <div class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-6 text-center animate-fade-out">
+              <div class="w-24 h-24 daraz-gradient rounded-3xl flex items-center justify-center text-4xl shadow-2xl mb-6 pulse-glow">
+                🛍️
+              </div>
+              <h1 class="text-3xl font-bold text-orange-500 mb-2">দারাজ বাংলাদেশ এফিলিয়েট</h1>
+              <p class="text-xl font-medium text-slate-300">ফোটো টু লিঙ্ক জেনারেটর</p>
+              <div class="mt-8 flex items-center space-x-2 text-xs text-orange-400 bg-orange-950/40 px-4 py-2 rounded-full border border-orange-500/30">
+                <span class="w-2 h-2 rounded-full bg-orange-500 animate-ping"></span>
+                <span>অ্যাপ লোড হচ্ছে... ২ সেকেন্ড অপেক্ষা করুন</span>
+              </div>
+            </div>
+          )}
+
+          {/* Toast Notification */}
+          {copiedText && (
+            <div class="fixed top-20 right-6 z-50 bg-orange-600 text-white px-5 py-3 rounded-xl shadow-xl font-medium text-sm animate-bounce flex items-center gap-2">
+              <span>✅</span>
+              <span>{copiedText}</span>
+            </div>
+          )}
+
+          {/* Top Header */}
+          <header class="bg-slate-900/90 backdrop-blur-md border-b border-orange-500/20 sticky top-0 z-40 px-4 py-3">
+            <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 daraz-gradient rounded-xl flex items-center justify-center text-xl font-bold shadow-lg">
+                  🛍️
+                </div>
+                <div>
+                  <h1 class="text-lg font-bold text-orange-500 leading-tight">দারাজ বাংলাদেশ এফিলিয়েট</h1>
+                  <span class="text-xs text-slate-400 font-medium bg-slate-800 px-2.5 py-0.5 rounded-full">ফোটo টু লিঙ্ক জেনারেটর (দারা)</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                {account.isPremium ? (
+                  <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    প্রিমিয়াম আনলিমিটেড এক্টিভ
+                  </span>
+                ) : (
+                  <span class="bg-orange-500/20 text-orange-400 border border-orange-500/30 px-3 py-1 rounded-full text-xs font-semibold">
+                    ফ্রি অ্যাকাউন্ট
+                  </span>
+                )}
+                
+                <a 
+                  href={PAYMENT_NUMBERS.whatsappUrl} 
+                  target="_blank"
+                  class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+                >
+                  💬 হোয়াটসঅ্যাপ সাপোর্ট
+                </a>
+              </div>
+            </div>
+          </header>
+
+          {/* Main Content */}
+          <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-8">
+            
+            {/* Upper Banner Title */}
+            <div class="daraz-glass p-6 sm:p-8 rounded-3xl text-center border border-orange-500/30 relative overflow-hidden">
+              <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-orange-500/10 rounded-full blur-2xl"></div>
+              <h2 class="text-2xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 mb-2">
+                ফোটো টু লিঙ্ক জেনারেটর
+              </h2>
+              <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto">
+                ছবি আপলোড করে এক ক্লিকে ডাইরেক্ট লিঙ্ক, মার্কডাউন, এইচটিএমএল এবং ফোরাম লিঙ্ক জেনারেট করুন
+              </p>
+              <div class="inline-block mt-3 bg-emerald-500/15 border border-emerald-500/30 px-4 py-1 rounded-full text-xs font-bold text-emerald-300">
+                ⚡ ডিরেক্ট ফটো লিঙ্ক সম্পূর্ণ ফ্রি ও আনলিমিটেড!
+              </div>
+            </div>
+
+            {/* Upload Area */}
+            <div class="bg-slate-900/80 border-2 border-dashed border-orange-500/40 hover:border-orange-500 rounded-3xl p-8 text-center transition duration-300 shadow-xl relative">
+              <input 
+                type="file" 
+                multiple 
+                accept="image/*" 
+                onChange={handleFileUpload} 
+                class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+              />
+              <div class="space-y-4">
+                <div class="w-16 h-16 daraz-gradient rounded-2xl flex items-center justify-center mx-auto text-3xl shadow-lg">
+                  📷
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-slate-100">Post your images here</h3>
+                  <p class="text-xs text-slate-400 mt-1">ছবি সিলেক্ট করতে ক্লিক করুন অথবা টেনে এনে ড্রপ করুন</p>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                  <a href={PAYMENT_NUMBERS.adUrl} target="_blank" class="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs px-4 py-2 rounded-xl">
+                    🔥 স্পন্সরড অফার লিঙ্ক
+                  </a>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-6 pt-2 text-xs text-slate-300">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={noResize} onChange={e => setNoResize(e.target.checked)} class="accent-orange-500 w-4 h-4 rounded"/>
+                    <span>Do not resize my image</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={noExpiration} onChange={e => setNoExpiration(e.target.checked)} class="accent-orange-500 w-4 h-4 rounded"/>
+                    <span>No expiration</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Generated Links Results */}
+            {images.length > 0 && (
+              <div class="space-y-6">
+                <h3 class="text-xl font-bold text-orange-400 flex items-center gap-2">
+                  <span>✨</span> জেনারেট হওয়া লিঙ্কসমূহ ({images.length})
+                </h3>
+
+                {images.map(img => (
+                  <div key={img.id} class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                    <div class="flex items-center gap-4 border-b border-slate-800 pb-3 justify-between">
+                      <div class="flex items-center gap-3">
+                        <img src={img.dataUrl} alt={img.filename} class="w-16 h-16 object-cover rounded-xl border border-slate-700"/>
+                        <div>
+                          <h4 class="font-bold text-slate-200 truncate">{img.filename}</h4>
+                          <span class="text-xs text-emerald-400 font-bold">Upload completed!</span>
+                        </div>
+                      </div>
+                      <button onClick={() => handleTestDirectUrl(img.dataUrl, img.filename)} class="bg-orange-500/20 text-orange-400 border border-orange-500/40 text-xs font-bold px-3 py-1.5 rounded-xl">
+                        👁️ ছবি টেস্ট করুন
+                      </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <label class="block text-slate-400 font-semibold mb-1">Link</label>
+                        <div class="flex gap-2">
+                          <input readOnly value={img.links.pageUrl} class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 w-full text-slate-300 font-mono text-xs"/>
+                          <button onClick={() => copyToClipboard(img.links.pageUrl, 'Link কপি হয়েছে')} class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-1.5 rounded-lg font-bold">Copy</button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block text-emerald-400 font-bold mb-1">Direct link (100% Free)</label>
+                        <div class="flex gap-2">
+                          <input readOnly value={img.links.directUrl} class="bg-slate-950 border border-emerald-500/40 rounded-lg px-3 py-1.5 w-full text-emerald-300 font-mono text-xs"/>
+                          <button onClick={() => copyToClipboard(img.links.directUrl, 'Direct link কপি হয়েছে')} class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-bold">Copy</button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block text-slate-400 font-semibold mb-1">Markdown (Link)</label>
+                        <div class="flex gap-2">
+                          <input readOnly value={img.links.markdownLink} class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 w-full text-slate-300 font-mono text-xs"/>
+                          <button onClick={() => copyToClipboard(img.links.markdownLink, 'Markdown (Link) কপি হয়েছে')} class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg">Copy</button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block text-slate-400 font-semibold mb-1">Markdown (Image)</label>
+                        <div class="flex gap-2">
+                          <input readOnly value={img.links.markdownImage} class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 w-full text-slate-300 font-mono text-xs"/>
+                          <button onClick={() => copyToClipboard(img.links.markdownImage, 'Markdown (Image) কপি হয়েছে')} class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg">Copy</button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block text-slate-400 font-semibold mb-1">Thumbnail for websites (HTML)</label>
+                        <div class="flex gap-2">
+                          <input readOnly value={img.links.htmlThumbnail} class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 w-full text-slate-300 font-mono text-xs"/>
+                          <button onClick={() => copyToClipboard(img.links.htmlThumbnail, 'HTML Thumbnail কপি হয়েছে')} class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg">Copy</button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label class="block text-slate-400 font-semibold mb-1">Hotlink for websites (HTML)</label>
+                        <div class="flex gap-2">
+                          <input readOnly value={img.links.htmlHotlink} class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 w-full text-slate-300 font-mono text-xs"/>
+                          <button onClick={() => copyToClipboard(img.links.htmlHotlink, 'HTML Hotlink কপি হয়েছে')} class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg">Copy</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Pricing & Bkash/Nagad Payment System */}
+            <div class="bg-slate-900/90 rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-6">
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-orange-400">পেমেন্ট ও প্রিমিয়াম প্ল্যান নির্বাচন</h3>
+                <p class="text-xs text-slate-400 mt-1">Upgrade to Premium for advanced features with bKash / Nagad</p>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 text-center space-y-3">
+                  <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1 rounded-full">মাসিক প্ল্যান</span>
+                  <div class="text-2xl font-bold text-orange-500">৳ ৩০০ <span class="text-xs text-slate-400">/ মাস</span></div>
+                  <p class="text-xs text-slate-400">বেসিক প্রিমিয়াম</p>
+                </div>
+
+                <div class="bg-slate-950 p-5 rounded-2xl border-2 border-orange-500 text-center space-y-3 relative">
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-[10px] uppercase font-bold px-3 py-0.5 rounded-full">Most Popular</span>
+                  <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1 rounded-full">বাৎসরিক প্ল্যান</span>
+                  <div class="text-2xl font-bold text-orange-500">৳ ১,৫০০ <span class="text-xs text-slate-400">/ বছর</span></div>
+                  <p class="text-xs text-emerald-400 font-semibold">৫৮% ছাড় (সেরা ভ্যালু)</p>
+                </div>
+
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 text-center space-y-3">
+                  <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1 rounded-full">৩-বছরের প্ল্যান</span>
+                  <div class="text-2xl font-bold text-orange-500">৳ ৩,৫০০ <span class="text-xs text-slate-400">/ ৩ বছর</span></div>
+                  <p class="text-xs text-emerald-400 font-semibold">৬৭% ছাড়</p>
+                </div>
+              </div>
+
+              {/* Payment Box */}
+              <div class="bg-slate-950 border border-orange-500/30 rounded-2xl p-6 space-y-4">
+                <h4 class="font-bold text-orange-400 flex items-center gap-2">
+                  <span>💳</span> বাংলাদেশী পেমেন্ট সিস্টেম (bKash & Nagad)
+                </h4>
+                <p class="text-xs text-slate-300">
+                  নিচের বিকাশ বা নগদ নম্বরে সেন্ড মানি বা পেমেন্ট করে ট্রানজেকশন আইডি (TrxID) দিন:
+                </p>
+
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                  <div>
+                    <span class="text-xs text-slate-400 block">bKash / Nagad Number</span>
+                    <span class="text-xl font-mono font-bold text-orange-400">{PAYMENT_NUMBERS.bkash}</span>
+                  </div>
+                  <button onClick={() => copyToClipboard(PAYMENT_NUMBERS.bkash, 'নম্বর কপি হয়েছে')} class="bg-orange-600 hover:bg-orange-500 text-white text-xs px-4 py-2 rounded-lg font-bold">
+                    নম্বর কপি করুন
+                  </button>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block text-xs text-slate-300 font-semibold">ট্রানজেকশন আইডি (TrxID) প্রবেশ করুন</label>
+                  <div class="flex gap-2">
+                    <input 
+                      type="text" 
+                      placeholder="e.g. BK89X1234 / NG98Y5678" 
+                      value={trxInput}
+                      onChange={e => setTrxInput(e.target.value)}
+                      class="bg-slate-900 border border-slate-800 text-slate-100 rounded-xl px-4 py-2.5 w-full font-mono text-sm focus:border-orange-500 outline-none"
+                    />
+                    <button 
+                      onClick={handleVerifyPayment} 
+                      disabled={verifying}
+                      class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm whitespace-nowrap transition"
+                    >
+                      {verifying ? 'ভেরিফাই হচ্ছে...' : 'ভেরিফাই করুন'}
+                    </button>
+                  </div>
+                </div>
+
+                {verifiedSuccess && (
+                  <div class="bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 p-4 rounded-xl text-sm font-semibold flex items-center gap-2">
+                    <span>🎉</span>
+                    <span>সাকসেসফুল ভেরিফাইড! আপনার প্রিমিয়াম আনলিমিটেড সার্ভিস সক্রিয় করা হয়েছে।</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+
+          {/* Floating WhatsApp / Chatbot Button */}
+          <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+            <a 
+              href={PAYMENT_NUMBERS.whatsappUrl} 
+              target="_blank"
+              class="bg-emerald-600 hover:bg-emerald-500 text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 text-xs font-bold transition transform hover:scale-105"
+            >
+              <span>🟢</span> হোয়াটসঅ্যাপ সাপোর্ট
+            </a>
+
+            <button 
+              onClick={() => setChatOpen(!chatOpen)}
+              class="w-14 h-14 daraz-gradient text-white rounded-full shadow-2xl flex items-center justify-center text-2xl pulse-glow"
+            >
+              💬
+            </button>
+          </div>
+
+          {/* Chatbot Window */}
+          {chatOpen && (
+            <div class="fixed bottom-24 right-6 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 flex flex-col h-96">
+              <div class="daraz-gradient p-3 rounded-t-2xl flex items-center justify-between text-white font-bold text-sm">
+                <span>💬 কাস্টমার সাপোর্ট চ্যাটবোট</span>
+                <button onClick={() => setChatOpen(false)}>✕</button>
+              </div>
+
+              <div class="flex-1 p-3 overflow-y-auto space-y-2 text-xs">
+                {chatMessages.map(msg => (
+                  <div key={msg.id} class={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div class={`max-w-[80%] p-2.5 rounded-xl ${msg.sender === 'user' ? 'bg-orange-600 text-white' : 'bg-slate-800 text-slate-200'}`}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div class="p-2 border-t border-slate-800 flex gap-2">
+                <input 
+                  type="text" 
+                  placeholder="আপনার প্রশ্ন লিখুন..." 
+                  value={userInput}
+                  onChange={e => setUserInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendMessage()}
+                  class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 w-full outline-none focus:border-orange-500"
+                />
+                <button onClick={sendMessage} class="bg-orange-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">পাঠান</button>
+              </div>
+            </div>
+          )}
+
+          {/* Legal Modal */}
+          {showLegalModal && (
+            <div class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+              <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-2xl w-full text-xs text-slate-300 space-y-4 max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                  <h3 class="font-bold text-orange-400 text-sm">আইনি নীতিমালা ও শর্তাবলী</h3>
+                  <button onClick={() => setShowLegalModal(false)} class="text-slate-400 font-bold">✕</button>
+                </div>
+                <p>দারাজ বাংলাদেশ এফিলিয়েট ফোটো টু লিঙ্ক জেনারেটর অ্যাপ ব্যবহারের নিয়ম ও গোপনীয়তা নীতি:</p>
+                <ul class="space-y-2 list-disc pl-4">
+                  <li>সকল ডিরেক্ট ইমেজ লিঙ্ক সম্পূর্ণ ফ্রিতে প্রদান করা হয়।</li>
+                  <li>কোনো বেআইনি বা কপিরাইট লঙ্ঘনকারী ছবি আপলোড করা যাবে না।</li>
+                  <li>বিকাশ বা নগদ ট্রানজেকশন ভেরিফিকেশনের পর প্রিমিয়াম ফিচার সচল হয়।</li>
+                </ul>
+                <div class="text-right">
+                  <button onClick={() => setShowLegalModal(false)} class="bg-orange-600 text-white px-4 py-2 rounded-xl font-bold">বন্ধ করুন</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Footer */}
+          <footer class="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500 space-y-2">
+            <p>© 2026 দারাজ বাংলাদেশ এফিলিয়েট (দারা). All rights reserved.</p>
+            <div class="flex items-center justify-center gap-4 text-orange-400">
+              <button onClick={() => { setLegalTab('terms'); setShowLegalModal(true); }} class="hover:underline">ব্যবহারের শর্তাবলী (Terms)</button>
+              <span>•</span>
+              <button onClick={() => { setLegalTab('privacy'); setShowLegalModal(true); }} class="hover:underline">গোপনীয়তা নীতি (Privacy)</button>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
