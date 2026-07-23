@@ -1,364 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daraz free short link generator unlimited</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daraz - Free Short Link Generator Unlimited</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; }
-    .daraz-gradient { background: linear-gradient(135deg, #F57224 0%, #FF4500 100%); }
-    .daraz-glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(245, 114, 36, 0.2); }
-    .btn-bounce { transition: transform 0.15s ease, box-shadow 0.15s ease; }
-    .btn-bounce:active { transform: scale(0.96); }
+    .glow-orange { text-shadow: 0 0 15px rgba(249, 115, 22, 0.4); }
+    @keyframes pulse-light { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.2); } }
+    .live-dot { width: 10px; height: 10px; background-color: #4ade80; border-radius: 50%; display: inline-block; animation: pulse-light 1.5s infinite ease-in-out; box-shadow: 0 0 8px #4ade80; }
   </style>
-</head>
-<body class="bg-slate-50 min-h-screen">
-  <!-- TOP COPY BAR FOR SINGLE FILE EXPORT -->
-  <div class="bg-slate-900 text-white px-4 py-2 text-xs md:text-sm flex flex-wrap items-center justify-between border-b border-orange-500/30 sticky top-0 z-50 shadow-md">
-    <div class="flex items-center gap-2">
-      <span class="bg-orange-500 text-white font-bold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">Single File HTML</span>
-      <span class="text-slate-200">Daraz Free Short Link Generator Unlimited</span>
-    </div>
-    <div class="flex items-center gap-2 mt-1 sm:mt-0">
-      <button onclick="copyEntireHtmlCode()" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-3 py-1 rounded-md text-xs transition flex items-center gap-1.5 shadow">
-        <i class="fa-solid fa-copy"></i> <span>Copy Entire HTML Code</span>
-      </button>
-      <button onclick="downloadHtmlFile()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-2.5 py-1 rounded-md text-xs border border-slate-700 transition">
-        <i class="fa-solid fa-download"></i> Save .html
-      </button>
-    </div>
-  </div>
-
-  <!-- MAIN APP CONTAINER -->
-  <div class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-
-    <!-- TOP BANNER & BRANDING -->
-    <header class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 text-center relative overflow-hidden">
-      <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
-      
-      <!-- LOGO & HEADING -->
-      <div class="flex flex-col items-center justify-center space-y-3">
-        <div class="w-20 h-20 bg-gradient-to-tr from-orange-600 via-orange-500 to-amber-500 rounded-2xl p-0.5 shadow-lg shadow-orange-500/20 btn-bounce flex items-center justify-center">
-          <div class="w-full h-full bg-white rounded-[14px] flex flex-col items-center justify-center p-2 text-center">
-            <span class="text-orange-600 font-black text-2xl tracking-tighter">drz.</span>
-            <span class="text-[9px] font-bold text-slate-700 uppercase tracking-widest -mt-1">Link</span>
+<script src="/_aistudio-iframe.js?v=1ee22f18"></script></head>
+<body class="min-h-screen bg-slate-50 text-slate-900 pb-16">
+  <!-- DARAZ APP CONTAINER -->
+  <div id="daraz-standalone-app" class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
+    
+    <!-- Top Header Banner (Vibrant Palette) -->
+    <header class="w-full bg-gradient-to-r from-orange-500 via-red-500 to-pink-600 rounded-3xl p-6 sm:p-8 shadow-xl text-white">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 bg-white rounded-xl shadow-inner flex items-center justify-center font-black text-orange-600 text-2xl shadow-md">
+            D
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tighter drop-shadow-md">
+              DARAZ <span class="text-orange-100 text-sm sm:text-lg font-bold block sm:inline">Unlimited Short Links</span>
+            </h1>
           </div>
         </div>
 
-        <h1 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight max-w-xl">
-          Daraz free short link generator unlimited
-        </h1>
-        <p class="text-xs md:text-sm text-slate-500 max-w-md">
-          Unlimited link shorten, Daraz affiliate tagger, deep link generator & 9 smart utility tools.
-        </p>
-
-        <!-- EXACT RATING & METRICS BADGE AS REQUESTED -->
-        <div class="w-full max-w-md bg-slate-50 rounded-xl p-3 border border-slate-200 my-2 shadow-inner">
-          <div class="grid grid-cols-3 divide-x divide-slate-200 text-center">
-            <div class="px-2">
-              <div class="text-base font-bold text-slate-900 flex items-center justify-center gap-1">
-                <span>4.3</span>
-                <span class="text-amber-500 text-sm">★</span>
-              </div>
-              <div class="text-[11px] text-slate-500 font-medium">177M reviews</div>
-            </div>
-            <div class="px-2">
-              <div class="text-base font-bold text-slate-900">12+</div>
-              <div class="text-[11px] text-slate-500 font-medium flex items-center justify-center gap-0.5">
-                <span>Rated for 12+</span>
-                <span class="text-xs">→</span>
-              </div>
-            </div>
-            <div class="px-2">
-              <div class="text-base font-bold text-slate-900">10B+</div>
-              <div class="text-[11px] text-slate-500 font-medium">Downloads</div>
-            </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2.5 bg-black/25 px-4 py-2 rounded-full border border-white/20">
+            <span class="live-dot"></span>
+            <span class="text-white text-xs font-bold uppercase tracking-widest">App Live</span>
           </div>
         </div>
-
-        <!-- APP DOWNLOAD BUTTON LINK -->
-        <a href="https://www.appcreator24.com/app4128045-v47jbp" target="_blank" rel="noopener noreferrer"
-           class="w-full max-w-md bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-orange-500/25 transition flex items-center justify-center gap-2 btn-bounce text-sm">
-          <i class="fa-solid fa-download text-base"></i>
-          <span>App Download</span>
-        </a>
       </div>
     </header>
 
-    <!-- 9 TOOL BUTTONS GRID -->
-    <section>
-      <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3 px-1">Choose a Utility Tool</h2>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <button onclick="switchTab('short-link')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-link text-lg"></i>
+    <!-- App Metadata Section -->
+    <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-xl flex flex-col md:flex-row items-center gap-6 justify-between">
+      <div class="flex items-center gap-5 w-full md:w-auto">
+        <div class="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl shadow-xl flex items-center justify-center border-4 border-white shrink-0">
+          <span class="text-4xl sm:text-5xl font-black text-white drop-shadow-md">D</span>
+        </div>
+        <div class="flex-1 space-y-2">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-xs font-bold bg-slate-100 px-3 py-1 rounded-lg text-slate-700 italic border border-slate-200">
+              Free Short Link Generator
+            </span>
+            <span class="text-orange-500 font-extrabold text-sm">4.3 ★</span>
           </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">1. Short Link</div>
-            <div class="text-[10px] text-slate-500">Unlimited Gen</div>
+          <div class="flex flex-wrap items-center gap-4 text-slate-500 text-xs font-semibold uppercase tracking-wider">
+            <div><p class="text-slate-900 text-base font-black">177M</p><span>Reviews</span></div>
+            <div class="w-px h-8 bg-slate-200"></div>
+            <div><p class="text-slate-900 text-base font-black">12+</p><span>Rated For</span></div>
+            <div class="w-px h-8 bg-slate-200"></div>
+            <div><p class="text-slate-900 text-base font-black">10B+</p><span>Downloads</span></div>
           </div>
-        </button>
+        </div>
+      </div>
+      <a href="https://www.appcreator24.com/app4128045-v47jbp" target="_blank" rel="noopener noreferrer" 
+         class="w-full md:w-auto text-center bg-orange-600 hover:bg-orange-700 text-white font-black py-3.5 px-8 rounded-2xl shadow-lg shadow-orange-200 transition-all text-base tracking-tight shrink-0">
+        Download App
+      </a>
+    </div>
 
-        <button onclick="switchTab('photo-to-link')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-image text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">2. Photo to Link</div>
-            <div class="text-[10px] text-slate-500">Image URL Host</div>
-          </div>
-        </button>
-
-        <button onclick="switchTab('text-to-speech')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-volume-high text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">3. Text 2 Speech</div>
-            <div class="text-[10px] text-slate-500">Voice & Spacing</div>
-          </div>
-        </button>
-
-        <button onclick="switchTab('language-translate')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-language text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">4. Translate</div>
-            <div class="text-[10px] text-slate-500">Multi Language</div>
-          </div>
-        </button>
-
-        <button onclick="switchTab('converter')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-calculator text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">5. Converter</div>
-            <div class="text-[10px] text-slate-500">Unit & Currency</div>
-          </div>
-        </button>
-
-        <button onclick="switchTab('mp4-to-mp3')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-music text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">6. MP4 to MP3</div>
-            <div class="text-[10px] text-slate-500">Extract Audio</div>
-          </div>
-        </button>
-
-        <button onclick="switchTab('vocal-remover')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-sliders text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">7. Vocal Remover</div>
-            <div class="text-[10px] text-slate-500">Karaoke Filter</div>
-          </div>
-        </button>
-
-        <button onclick="switchTab('text-to-photo')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">8. Text 2 Photo</div>
-            <div class="text-[10px] text-slate-500">AI Image Generator</div>
-          </div>
-        </button>
-
-        <button onclick="switchTab('photo-to-video')" class="p-3 bg-white hover:bg-orange-50 rounded-xl border border-slate-200 text-left transition shadow-sm btn-bounce flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-cyan-100 text-cyan-600 flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-film text-lg"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900">9. Photo to Video</div>
-            <div class="text-[10px] text-slate-500">Slideshow Maker</div>
-          </div>
+    <!-- Main Short Link Generator Feature -->
+    <main class="w-full bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl">
+      <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Unlimited Short Link Generator</h2>
+      <p class="text-slate-500 text-sm mb-6">Paste any long URL below to instantly generate clean, short Daraz links with QR code support.</p>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Paste Destination Long URL</label>
+          <input id="standalone-url-input" type="url" placeholder="https://example.com/very/long/destination/link" 
+                 class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-orange-500 transition">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">Custom Alias / Slug (Optional)</label>
+          <input id="standalone-slug-input" type="text" placeholder="e.g. daraz-deal-2026" 
+                 class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-slate-900 text-sm focus:bg-white focus:outline-none focus:border-orange-500 transition">
+        </div>
+        <button onclick="generateStandaloneLink()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-3.5 px-6 rounded-2xl transition shadow-lg shadow-orange-200 text-base cursor-pointer">
+          Generate Short Link
         </button>
       </div>
-    </section>
 
-    <!-- ACTIVE TOOL DISPLAY AREA -->
-    <main id="tool-content" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-      <!-- Short Link Tool Active by Default -->
-      <div id="tool-short-link">
-        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2 mb-4">
-          <i class="fa-solid fa-bolt text-orange-500"></i> Short Link Generator (Unlimited)
-        </h3>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Paste Daraz / Any Product Long Link</label>
-            <input type="text" id="short-input-url" placeholder="https://www.daraz.com.bd/products/item-i123456.html" 
-                   class="w-full p-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none" />
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Format Type</label>
-              <select id="short-format" class="w-full p-2.5 border border-slate-300 rounded-xl text-xs bg-white">
-                <option value="daraz-affiliate">Daraz Affiliate Short Link (aff_id=drz_2026)</option>
-                <option value="clean-short">Clean Short Link (drz.sh/xy99)</option>
-                <option value="deep-link">Daraz App Deep Link (daraz://product)</option>
-                <option value="social-bio">Social Bio Short Link</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Custom Slug (Optional)</label>
-              <input type="text" id="short-custom-slug" placeholder="e.g. best-deal-2026" class="w-full p-2.5 border border-slate-300 rounded-xl text-xs" />
-            </div>
-          </div>
-          <button onclick="generateShortLink()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl shadow-md transition btn-bounce text-sm flex items-center justify-center gap-2">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Unlimited Short Link
+      <div id="standalone-result" class="hidden mt-6 p-6 bg-slate-50 border border-orange-300 rounded-2xl space-y-3">
+        <p class="text-xs uppercase tracking-wider text-orange-600 font-extrabold">Generated Short Link:</p>
+        <div class="flex flex-col sm:flex-row items-center gap-3">
+          <input id="generated-short-url" readonly class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-orange-600 font-mono text-sm font-bold">
+          <button onclick="copyGeneratedLink()" class="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl text-xs font-bold shadow-md cursor-pointer shrink-0">
+            Copy Link
           </button>
-          
-          <div id="short-result" class="hidden bg-orange-50 border border-orange-200 rounded-xl p-4 space-y-2">
-            <div class="text-xs font-bold text-orange-900">Generated Short Link:</div>
-            <div class="flex items-center gap-2">
-              <input type="text" id="short-output-url" readonly class="w-full bg-white p-2.5 border border-orange-300 rounded-lg text-xs font-mono text-slate-900" />
-              <button onclick="copyOutputUrl()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-lg text-xs font-bold shrink-0 transition">
-                <i class="fa-solid fa-copy"></i> Copy
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </main>
 
-    <!-- SUPPORT INBOX SECTION -->
-    <section class="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h3 class="text-base font-bold flex items-center gap-2">
-            <i class="fa-solid fa-headset text-orange-400"></i> Support Inbox
-          </h3>
-          <p class="text-xs text-slate-400">Official email: <span class="text-orange-300 font-mono font-semibold">daraz.bangladesh.shop.com</span></p>
-        </div>
-      </div>
-      <div class="space-y-3">
-        <input type="email" id="supp-email" placeholder="Your Email Address" class="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white" />
-        <textarea id="supp-msg" rows="3" placeholder="Write your inquiry or report an issue..." class="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white"></textarea>
-        <button onclick="submitSupportTicket()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition btn-bounce">
-          Send to Support
-        </button>
-        <p id="supp-status" class="text-xs text-emerald-400 hidden"></p>
+    <!-- 9 Attractive Digital Tools Grid -->
+    <section className="w-full mb-8">
+      <h3 class="text-2xl font-extrabold text-slate-900 mb-4">9 Attractive Daraz Digital Tools</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 1</span><h4 class="font-bold text-slate-800 mt-2">Photo to Link Generator</h4><p class="text-xs text-slate-500 mt-1">OCR link extraction and image file storage.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 2</span><h4 class="font-bold text-slate-800 mt-2">Short Link Generator</h4><p class="text-xs text-slate-500 mt-1">Batch shortener & custom links.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 3</span><h4 class="font-bold text-slate-800 mt-2">text 2 space</h4><p class="text-xs text-slate-500 mt-1">Text formatting & space spacing tools.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 4</span><h4 class="font-bold text-slate-800 mt-2">Language Translate</h4><p class="text-xs text-slate-500 mt-1">50+ languages translation.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 5</span><h4 class="font-bold text-slate-800 mt-2">Converter</h4><p class="text-xs text-slate-500 mt-1">PNG/JPG/WEBP converter.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 6</span><h4 class="font-bold text-slate-800 mt-2">mp4 to mp3 convart</h4><p class="text-xs text-slate-500 mt-1">Extract high quality audio.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 7</span><h4 class="font-bold text-slate-800 mt-2">vocal Remover</h4><p class="text-xs text-slate-500 mt-1">Isolate vocal & music stems.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 8</span><h4 class="font-bold text-slate-800 mt-2">text to photo Genarrator</h4><p class="text-xs text-slate-500 mt-1">AI artwork from prompts.</p></div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 9</span><h4 class="font-bold text-slate-800 mt-2">photo to video</h4><p class="text-xs text-slate-500 mt-1">Animate static photos.</p></div>
       </div>
     </section>
 
-    <!-- FOOTER & POLICIES SECTION -->
-    <footer class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 text-center space-y-4 text-xs text-slate-600">
-      <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-medium">
-        <button onclick="showPolicy('privacy')" class="hover:text-orange-600 underline">Privacy Policy</button>
-        <span>•</span>
-        <button onclick="showPolicy('copyright')" class="hover:text-orange-600 underline">Copyright</button>
-        <span>•</span>
-        <button onclick="showPolicy('policyContent')" class="hover:text-orange-600 underline">Policy Content</button>
-        <span>•</span>
-        <button onclick="showPolicy('policyCookies')" class="hover:text-orange-600 underline">Policy Cookies</button>
-        <span>•</span>
-        <button onclick="showPolicy('policyThemes')" class="hover:text-orange-600 underline">Policy Themes</button>
-        <span>•</span>
-        <button onclick="showPolicy('condition')" class="hover:text-orange-600 underline">Condition</button>
-        <span>•</span>
-        <button onclick="showPolicy('childrenPolicy')" class="hover:text-orange-600 underline">Children Policy</button>
+    <!-- Support Inbox & Legal Footer -->
+    <footer class="w-full bg-slate-900 text-slate-400 p-6 sm:p-8 rounded-3xl flex flex-col gap-4 border border-slate-800 shadow-xl">
+      <p class="text-white font-bold text-xs sm:text-sm">
+        Support: <strong class="text-orange-400 font-mono">daraz.bangladesh.shop.com</strong>
+      </p>
+      <div class="flex flex-wrap gap-x-4 gap-y-2 text-[11px] uppercase font-bold tracking-widest border-t border-slate-800 pt-4 text-slate-400">
+        <span>Privacy Policy</span><span>•</span><span>Copyright</span><span>•</span><span>Policy Content</span><span>•</span><span>Policy Cookies</span><span>•</span><span>Policy Themes</span><span>•</span><span>Condition</span><span>•</span><span>Children Policy</span>
       </div>
-      <div class="text-[11px] text-slate-400">
-        © 2026 Daraz free short link generator unlimited. Verified & Compliant Utility App.
-      </div>
+      <p class="text-xs text-slate-500">© 2026 DARAZ DIGITAL SERVICES. All rights reserved.</p>
     </footer>
-
-  </div>
-
-  <!-- POLICY MODAL -->
-  <div id="policy-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-4 max-h-[85vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-        <h3 id="modal-title" class="text-base font-bold text-slate-900">Policy View</h3>
-        <button onclick="closePolicyModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
-      </div>
-      <div id="modal-body" class="text-xs text-slate-600 space-y-2 leading-relaxed"></div>
-      <button onclick="closePolicyModal()" class="w-full bg-slate-900 text-white font-bold py-2 rounded-xl text-xs">Close</button>
-    </div>
   </div>
 
   <script>
-    function copyEntireHtmlCode() {
-      const fullHtml = document.documentElement.outerHTML;
-      navigator.clipboard.writeText('<!DOCTYPE html>\n' + fullHtml).then(() => {
-        alert('SUCCESS! Full single-file HTML code copied to your clipboard!');
-      }).catch(() => {
-        alert('HTML code generated! Please inspect code to copy.');
-      });
+    function generateStandaloneLink() {
+      const url = document.getElementById('standalone-url-input').value;
+      const slug = document.getElementById('standalone-slug-input').value || Math.random().toString(36).substring(2, 8);
+      if (!url) return alert('Please enter a long URL');
+      const shortUrl = window.location.origin + '/s/' + slug;
+      document.getElementById('generated-short-url').value = shortUrl;
+      document.getElementById('standalone-result').classList.remove('hidden');
     }
-
-    function downloadHtmlFile() {
-      const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-      const blob = new Blob([fullHtml], { type: 'text/html' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'daraz-short-link-generator.html';
-      a.click();
-    }
-
-    function generateShortLink() {
-      const url = document.getElementById('short-input-url').value.trim();
-      if (!url) {
-        alert('Please enter a valid Daraz or product link!');
-        return;
-      }
-      const slug = document.getElementById('short-custom-slug').value.trim() || Math.random().toString(36).substring(2, 8);
-      const format = document.getElementById('short-format').value;
-      
-      let generated = 'https://drz.sh/' + slug;
-      if (format === 'daraz-affiliate') {
-        generated += '?aff_id=drz_2026&utm_source=daraz_short_link';
-      } else if (format === 'deep-link') {
-        generated = 'daraz://product/detail?url=' + encodeURIComponent(url);
-      }
-
-      document.getElementById('short-output-url').value = generated;
-      document.getElementById('short-result').classList.remove('hidden');
-    }
-
-    function copyOutputUrl() {
-      const val = document.getElementById('short-output-url').value;
-      navigator.clipboard.writeText(val);
+    function copyGeneratedLink() {
+      const copyText = document.getElementById('generated-short-url');
+      navigator.clipboard.writeText(copyText.value);
       alert('Short link copied to clipboard!');
-    }
-
-    function submitSupportTicket() {
-      const email = document.getElementById('supp-email').value;
-      const msg = document.getElementById('supp-msg').value;
-      if (!email || !msg) {
-        alert('Please provide your email and inquiry message.');
-        return;
-      }
-      const status = document.getElementById('supp-status');
-      status.innerText = 'Support ticket sent successfully! Contact: daraz.bangladesh.shop.com';
-      status.classList.remove('hidden');
-    }
-
-    function showPolicy(type) {
-      const titles = {
-        privacy: 'Privacy Policy', copyright: 'Copyright Policy', policyContent: 'Policy Content',
-        policyCookies: 'Policy Cookies', policyThemes: 'Policy Themes', condition: 'Terms & Conditions', childrenPolicy: 'Children Policy'
-      };
-      document.getElementById('modal-title').innerText = titles[type] || 'Policy';
-      document.getElementById('modal-body').innerText = 'Official policy guidelines for ' + (titles[type] || 'App') + '. Verified for safe use on Daraz free short link generator unlimited. Support contact: daraz.bangladesh.shop.com';
-      document.getElementById('policy-modal').classList.remove('hidden');
-    }
-
-    function closePolicyModal() {
-      document.getElementById('policy-modal').classList.add('hidden');
-    }
-
-    function switchTab(tab) {
-      alert('Switched to tool: ' + tab + '. Full interactive experience available in main web app interface!');
     }
   </script>
 </body>
-         </html>
+  </html>
