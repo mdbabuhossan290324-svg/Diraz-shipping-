@@ -14,29 +14,13 @@
 <script src="/_aistudio-iframe.js?v=1ee22f18"></script></head>
 <body class="bg-slate-100 text-slate-900 selection:bg-orange-500 selection:text-white min-h-screen">
 
-  <!-- Top Sticky Quick Bar for Copying HTML Code (Only in preview for copying) -->
-  <div id="singleFileTopBar" class="bg-slate-900 text-white py-2 px-4 text-center text-xs font-bold flex flex-wrap items-center justify-between gap-2 shadow-md sticky top-0 z-40">
-    <div class="flex items-center gap-2">
-      <span class="bg-orange-500 text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">Single File HTML Export</span>
-      <span>Daraz Short Link Generator (All-in-One Standalone Code)</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <button onclick="copySingleHtmlCode()" class="bg-orange-600 hover:bg-orange-500 text-white px-4 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 text-xs font-black shadow-lg animate-pulse">
-        📋 Copy Complete index.html Code
-      </button>
-      <a href="https://www.appcreator24.com/app4128045-v47jbp" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg transition-all text-xs font-extrabold shadow">
-        ⚡ Download App
-      </a>
-    </div>
-  </div>
-
   <div class="max-w-6xl mx-auto px-4 py-6 sm:py-8">
 
     <!-- HEADER BANNER -->
     <header class="relative bg-gradient-to-r from-orange-600 via-amber-500 to-rose-600 text-white rounded-3xl shadow-xl overflow-hidden border border-orange-400/30 mb-8 p-6 sm:p-8">
       <div class="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-white/20 pb-6">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-          <div className="relative shrink-0">
+          <div class="relative shrink-0">
             <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=200&auto=format&fit=crop&q=80" alt="Daraz Logo" class="w-20 h-20 rounded-2xl shadow-lg border-2 border-white object-cover">
           </div>
           <div>
@@ -59,7 +43,7 @@
             </div>
 
             <p class="text-orange-100 text-xs sm:text-sm font-medium mt-2">
-              Free Unlimited Short Link Shortener, Affiliate Converter & QR Tool
+              Free Unlimited Short Link Shortener, Affiliate Converter &amp; QR Tool
             </p>
           </div>
         </div>
@@ -79,7 +63,7 @@
 
       <!-- Quick 5 Tools Bar -->
       <div class="mt-6">
-        <p class="text-xs font-bold text-orange-100 mb-2 uppercase tracking-wider">⚡ 5 Essential Quick Tools for Sellers & Affiliates:</p>
+        <p class="text-xs font-bold text-orange-100 mb-2 uppercase tracking-wider">⚡ 5 Essential Quick Tools for Sellers &amp; Affiliates:</p>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
           <button onclick="toggleModal('photoModal')" class="bg-white hover:bg-orange-50 text-slate-900 p-3 rounded-xl font-black text-xs text-left shadow border border-orange-200">
             1. 🖼️ Photo To Link
@@ -167,7 +151,7 @@
       <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-4">
         <div>
           <h4 class="font-black text-slate-900 text-sm">Daraz Short Link Generator</h4>
-          <p class="text-slate-500">Unlimited URL Shortener, Affiliate Converter & QR Tools</p>
+          <p class="text-slate-500">Unlimited URL Shortener, Affiliate Converter &amp; QR Tools</p>
         </div>
         <div class="flex flex-wrap items-center gap-3 font-bold text-slate-700">
           <button onclick="toggleModal('supportModal')" class="hover:text-orange-600">✉️ Support: daraz.bangladesh.shop.com</button>
@@ -364,7 +348,6 @@
 
       const code = slug || 'drz-' + Math.random().toString(36).substring(2, 7);
       const shortUrl = window.location.origin + '/s/' + code;
-      const tagged = url + (url.includes('?') ? '&' : '?') + 'aff_id=' + (affId || 'BD_SHOP');
 
       document.getElementById('resultShortLink').innerText = shortUrl;
       document.getElementById('socialPostFormat').innerText = 
@@ -437,24 +420,6 @@
       const comm = (price * 0.085).toFixed(2);
       document.getElementById('commResult').innerText = "৳ " + comm + " BDT";
     }
-
-    function copySingleHtmlCode() {
-      // Clone document and strip the top copy bar so public index.html won't show the copy button
-      const clone = document.documentElement.cloneNode(true);
-      const copyBar = clone.querySelector('#singleFileTopBar');
-      if (copyBar) {
-        copyBar.remove();
-      }
-      const cleanHtml = '<!DOCTYPE html>\n' + clone.outerHTML;
-
-      navigator.clipboard.writeText(cleanHtml).then(() => {
-        alert('সফল হয়েছে! সম্পূর্ণ এইচটিএমএল (Single File index.html) কোড ক্লিপবোর্ডে কপি করা হয়েছে।\n\nপাবলিক ওয়েবসাইট বা GitHub-এ এই কপি বারটি শো করবে না!');
-      }).catch(e => {
-        // Fallback
-        navigator.clipboard.writeText(document.documentElement.outerHTML);
-        alert('এইচটিএমএল কোড কপি করা হয়েছে!');
-      });
-    }
   </script>
 </body>
-              </html>
+</html>
