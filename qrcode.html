@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daraz Free QR Code Generator Unlimited</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at center, #0f172a, #020617); color: white; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-glow { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+        .blink { animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .animate-gradient { background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4); background-size: 200% 200%; animation: gradient 5s ease infinite; }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div id="splash" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020617] transition-opacity duration-1000">
+        <div class="w-32 h-32 border-t-4 border-cyan-400 rounded-full animate-spin mb-8"></div>
+        <h1 class="text-3xl font-black tracking-tighter text-transparent bg-clip-text animate-gradient">DARAZ QR ENGINE</h1>
+    </div>
+
+    <div class="max-w-2xl mx-auto space-y-6">
+        <header class="glass p-6 rounded-3xl neon-glow text-center">
+            <div class="flex justify-center items-center gap-4 mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center text-3xl font-bold text-white shadow-lg">QR</div>
+                <div class="text-left">
+                    <h1 class="text-xl font-black uppercase">Daraz Free QR Code Generator Unlimited</h1>
+                    <div class="flex items-center gap-2 text-xs font-bold text-cyan-400">
+                        <span>✔ Verified</span>
+                        <div class="w-2 h-2 bg-green-500 rounded-full blink"></div> LIVE
+                    </div>
+                </div>
+            </div>
+            <a href="https://www.appcreator24.com/app4128045-v47jbp" target="_blank" class="block w-full py-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 font-bold hover:scale-[1.02] transition-transform animate-pulse">Download App</a>
+        </header>
+
+        <div class="grid grid-cols-4 gap-2">
+            {[ {v:'4.3★',l:'Rating'}, {v:'12+',l:'Rated'}, {v:'10B+',l:'Downloads'}, {v:'177M',l:'Reviews'} ].map(i => (
+                <div class="glass p-3 rounded-xl text-center">
+                    <div class="font-bold text-lg">{i.v}</div>
+                    <div class="text-[9px] text-gray-400 uppercase">{i.l}</div>
+                </div>
+            ))}
+        </div>
+
+        <div class="glass p-6 rounded-3xl space-y-4">
+            <input id="qr-text" type="text" placeholder="Enter URL or Text..." class="w-full bg-black/50 p-4 rounded-xl border border-white/10 focus:border-cyan-500 outline-none transition-all">
+            <button onclick="generateQR()" class="w-full py-4 rounded-xl bg-cyan-500 text-black font-black uppercase hover:bg-cyan-400 transition-colors">Generate QR</button>
+            <div id="qr-code" class="flex justify-center p-6 bg-white rounded-2xl mx-auto w-fit"></div>
+            <div id="actions" class="hidden grid grid-cols-2 gap-2">
+                <button onclick="downloadQR()" class="py-3 rounded-lg bg-blue-600 font-bold">Download PNG</button>
+                <button onclick="window.print()" class="py-3 rounded-lg bg-gray-700 font-bold">Print QR</button>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            {['Privacy Policy', 'Terms & Conditions', 'Copyright', 'Children Policy'].map(p => (
+                <details class="glass p-4 rounded-xl">
+                    <summary class="font-bold cursor-pointer list-none flex justify-between">✔ {p} <span>+</span></summary>
+                    <p class="mt-4 text-xs text-gray-400 leading-relaxed">Professional legal and policy compliance terms for Daraz QR Generator users.</p>
+                </details>
+            ))}
+        </div>
+    </div>
+
+    <script>
+        window.onload = () => setTimeout(() => document.getElementById('splash').style.opacity = '0', 2000);
+        setTimeout(() => document.getElementById('splash').remove(), 3000);
+
+        const qrcode = new QRCode("qr-code", { width: 256, height: 256, correctLevel: QRCode.CorrectLevel.H });
+
+        function generateQR() {
+            const text = document.getElementById('qr-text').value;
+            if(!text) return;
+            qrcode.clear();
+            qrcode.makeCode(text);
+            document.getElementById('actions').classList.remove('hidden');
+        }
+
+        function downloadQR() {
+            const img = document.querySelector('#qr-code img').src;
+            const a = document.createElement('a');
+            a.href = img;
+            a.download = 'daraz-qr.png';
+            a.click();
+        }
+    </script>
+</body>
+</html>
