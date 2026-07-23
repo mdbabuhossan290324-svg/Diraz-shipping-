@@ -104,15 +104,23 @@
     <section className="w-full mb-8">
       <h3 class="text-2xl font-extrabold text-slate-900 mb-4">9 Attractive Daraz Digital Tools</h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 1</span><h4 class="font-bold text-slate-800 mt-2">Photo to Link Generator</h4><p class="text-xs text-slate-500 mt-1">OCR link extraction and image file storage.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 2</span><h4 class="font-bold text-slate-800 mt-2">Short Link Generator</h4><p class="text-xs text-slate-500 mt-1">Batch shortener & custom links.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 3</span><h4 class="font-bold text-slate-800 mt-2">text 2 space</h4><p class="text-xs text-slate-500 mt-1">Text formatting & space spacing tools.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 4</span><h4 class="font-bold text-slate-800 mt-2">Language Translate</h4><p class="text-xs text-slate-500 mt-1">50+ languages translation.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 5</span><h4 class="font-bold text-slate-800 mt-2">Converter</h4><p class="text-xs text-slate-500 mt-1">PNG/JPG/WEBP converter.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 6</span><h4 class="font-bold text-slate-800 mt-2">mp4 to mp3 convart</h4><p class="text-xs text-slate-500 mt-1">Extract high quality audio.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 7</span><h4 class="font-bold text-slate-800 mt-2">vocal Remover</h4><p class="text-xs text-slate-500 mt-1">Isolate vocal & music stems.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 8</span><h4 class="font-bold text-slate-800 mt-2">text to photo Genarrator</h4><p class="text-xs text-slate-500 mt-1">AI artwork from prompts.</p></div>
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded">Tool 9</span><h4 class="font-bold text-slate-800 mt-2">photo to video</h4><p class="text-xs text-slate-500 mt-1">Animate static photos.</p></div>
+        <button onclick="openStandaloneTool('Photo to Link Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 1</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">Photo to Link Generator</h4><p class="text-xs text-slate-500 mt-1">OCR link extraction and image file storage.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('Short Link Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 2</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">Short Link Generator</h4><p class="text-xs text-slate-500 mt-1">Batch shortener & custom links.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('tex 2 space Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 3</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">tex 2 space Generator</h4><p class="text-xs text-slate-500 mt-1">Text formatting & space spacing tools.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('Language Translate Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 4</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">Language Translate Generator</h4><p class="text-xs text-slate-500 mt-1">50+ languages translation.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('Converter Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 5</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">Converter Generator</h4><p class="text-xs text-slate-500 mt-1">PNG/JPG/WEBP converter.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('mp4 to mp3 convart Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 6</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">mp4 to mp3 convart Generator</h4><p class="text-xs text-slate-500 mt-1">Extract high quality audio.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('vocal Remover Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 7</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">vocal Remover Generator</h4><p class="text-xs text-slate-500 mt-1">Isolate vocal & music stems.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('text to photo Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 8</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">text to photo Generator</h4><p class="text-xs text-slate-500 mt-1">AI artwork from prompts.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
+
+        <button onclick="openStandaloneTool('photo to video Generator')" class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-orange-500 shadow-sm text-left transition hover:shadow-md cursor-pointer group"><span class="text-xs font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100">Tool 9</span><h4 class="font-bold text-slate-800 mt-2 group-hover:text-orange-600">photo to video Generator</h4><p class="text-xs text-slate-500 mt-1">Animate static photos.</p><span class="inline-block mt-3 text-xs font-bold text-orange-600">Launch Generator →</span></button>
       </div>
     </section>
 
@@ -132,7 +140,7 @@
     function generateStandaloneLink() {
       const url = document.getElementById('standalone-url-input').value;
       const slug = document.getElementById('standalone-slug-input').value || Math.random().toString(36).substring(2, 8);
-      if (!url) return alert('Please enter a long URL');
+      if (!url) return alert('Please enter a long URL or input data');
       const shortUrl = window.location.origin + '/s/' + slug;
       document.getElementById('generated-short-url').value = shortUrl;
       document.getElementById('standalone-result').classList.remove('hidden');
@@ -142,6 +150,12 @@
       navigator.clipboard.writeText(copyText.value);
       alert('Short link copied to clipboard!');
     }
+    function openStandaloneTool(toolName) {
+      document.getElementById('standalone-url-input').placeholder = 'Enter input for ' + toolName + '...';
+      document.getElementById('standalone-slug-input').value = toolName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      document.getElementById('standalone-url-input').focus();
+      document.getElementById('standalone-url-input').scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
 </body>
-  </html>
+</html>
